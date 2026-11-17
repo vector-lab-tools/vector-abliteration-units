@@ -1,0 +1,34 @@
+{
+  "_": "The Core Collection's interface, beside core.css: which component draws each control (SPEC 5f), and the collection's tint, the faceplate's blue, which every unit in it shares. A unit's own key overrides its kind's default.",
+  "components": {
+    "defaults": {
+      "knob": "knob-1",
+      "int": "knob-1",
+      "fader": "knob-big-1",
+      "choice": "selector",
+      "toggle": "light-1",
+      "direction": "menu-1",
+      "text": "field-1",
+      "target": "knob-small-1",
+      "target-menu": "menu-1",
+      "host-knob": "knob-small-1",
+      "host-choice": "selector",
+      "host-toggle": "light-1"
+    },
+    "units": {
+      "gate": {
+        "keep": "knob-big-3"
+      },
+      "limiter": {
+        "ceiling": "knob-big-3"
+      },
+      "shifter": {
+        "angle": "knob-big-3"
+      },
+      "neuron": {
+        "value": "knob-big-3"
+      }
+    }
+  },
+  "tint": "#2c4f9e"
+}

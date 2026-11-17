@@ -1,0 +1,67 @@
+/* Vector Abliteration Units: the explainer runtime's styles (explain.js draws into them).
+   Copyright (C) 2026 David M. Berry. SPDX-License-Identifier: GPL-3.0-or-later
+   Every colour is a --vx-* property. Each falls back to a name the VAU site uses (--ink, --accent
+   and so on) and then to a fixed value, dark by default and light where the reader's system
+   prefers it. A host sets the --vx-* properties on .vau-explain to its own colours. */
+.vau-explain {
+  --vx-ink: var(--ink, #e4e6ec); --vx-dim: var(--ink-dim, #9aa0ad); --vx-bright: var(--bright, #fbfcfe);
+  --vx-line: var(--line, rgba(230,232,238,0.18)); --vx-soft: var(--line-soft, rgba(230,232,238,0.09));
+  --vx-acc: var(--accent, #e3a43c); --vx-acc-soft: var(--accent-soft, rgba(227,164,60,0.12));
+  --vx-blue: var(--blue, #5b9cf0); --vx-green: var(--green, #4ccf6a); --vx-red: var(--red, #ff8a7a);
+  --vx-panel: var(--panel-2, rgba(230,232,238,0.06)); --vx-bar: var(--panel, rgba(230,232,238,0.035));
+  --vx-stage: var(--code-bg, rgba(4,5,8,0.72)); --vx-bg: var(--bg, #101217);
+  --vx-mono: var(--mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+  margin: 0.2rem 0 1.5rem; max-width: 600px;
+}
+@media (prefers-color-scheme: light) {
+  .vau-explain {
+    --vx-ink: var(--ink, #23242a); --vx-dim: var(--ink-dim, #5f5e59); --vx-bright: var(--bright, #0b0b0d);
+    --vx-line: var(--line, rgba(20,18,12,0.18)); --vx-soft: var(--line-soft, rgba(20,18,12,0.09));
+    --vx-acc: var(--accent, #a2600c); --vx-acc-soft: var(--accent-soft, rgba(162,96,12,0.10));
+    --vx-blue: var(--blue, #2a78d6); --vx-green: var(--green, #0c8a0c); --vx-red: var(--red, #b3261e);
+    --vx-panel: var(--panel-2, rgba(20,18,12,0.06)); --vx-bar: var(--panel, rgba(20,18,12,0.035));
+    --vx-stage: var(--code-bg, rgba(20,18,12,0.04)); --vx-bg: var(--bg, #f3f2ee);
+  }
+}
+.vau-explain .vx-stage { border: 1px solid var(--vx-line); border-radius: 8px 8px 0 0; background: var(--vx-stage); cursor: pointer; overflow: hidden; }
+.vau-explain .vx-stage svg { display: block; width: 100%; height: auto; font-family: var(--vx-mono); }
+.vau-explain .vx-bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; padding: 0.45rem 0.7rem; border: 1px solid var(--vx-line);
+  border-top: 0; border-radius: 0 0 8px 8px; background: var(--vx-bar); font-family: var(--vx-mono); font-size: 0.68rem; line-height: 1.45; color: var(--vx-dim); }
+.vau-explain .vx-read { min-height: 2.9em; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vau-explain .vx-play { flex: 0 0 auto; font-family: var(--vx-mono); font-size: 0.62rem; letter-spacing: 0.8px; text-transform: uppercase; padding: 0.25rem 0.55rem;
+  border: 1px solid var(--vx-line); border-radius: 4px; background: var(--vx-panel); color: var(--vx-ink); cursor: pointer; }
+.vau-explain .vx-play:hover, .vau-explain.vx-paused .vx-play { border-color: var(--vx-acc); color: var(--vx-acc); }
+.vau-explain .vx-cap { margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.5; color: var(--vx-dim); }
+.vau-explain .vx-cap code { font-family: var(--vx-mono); font-size: 0.82em; }
+@media (max-width: 640px) { .vau-explain .vx-read { min-height: 4.35em; } }
+
+/* the figure's marks */
+.vau-explain .f-ink { fill: var(--vx-ink); } .vau-explain .f-dim { fill: var(--vx-dim); } .vau-explain .f-acc { fill: var(--vx-acc); }
+.vau-explain .f-blue { fill: var(--vx-blue); } .vau-explain .f-green { fill: var(--vx-green); } .vau-explain .f-red { fill: var(--vx-red); }
+.vau-explain .f-panel { fill: var(--vx-panel); } .vau-explain .f-bg { fill: var(--vx-bg); }
+.vau-explain .s-ink { stroke: var(--vx-ink); } .vau-explain .s-dim { stroke: var(--vx-dim); } .vau-explain .s-line { stroke: var(--vx-line); }
+.vau-explain .s-soft { stroke: var(--vx-soft); } .vau-explain .s-acc { stroke: var(--vx-acc); } .vau-explain .s-blue { stroke: var(--vx-blue); }
+.vau-explain .s-green { stroke: var(--vx-green); } .vau-explain .s-red { stroke: var(--vx-red); }
+.vau-explain .t-xs { font-size: 9.5px; } .vau-explain .t-s { font-size: 11px; } .vau-explain .t-m { font-size: 13px; }
+@media (max-width: 640px) { .vau-explain .t-xs { font-size: 10.5px; } .vau-explain .t-s { font-size: 12px; } }
+
+/* the example texts under the figure */
+.vau-explain.vx-has-texts .vx-bar { border-radius: 0; }
+.vau-explain .vx-texts { display: none; padding: 0.45rem 0.7rem 0.5rem; border: 1px solid var(--vx-line); border-top: 0;
+  border-radius: 0 0 8px 8px; background: var(--vx-bar); font-size: 0.86rem; line-height: 1.5; color: var(--vx-ink); }
+.vau-explain.vx-has-texts .vx-texts { display: block; }
+/* every version of the text in one grid cell: the block keeps the height of the longest */
+.vau-explain .vx-tgrid { display: grid; }
+.vau-explain .vx-tv { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0s linear 0.35s; }
+.vau-explain .vx-tv.on { opacity: 1; visibility: visible; transition: opacity 0.35s ease; }
+@media (prefers-reduced-motion: reduce) { .vau-explain .vx-tv, .vau-explain .vx-tv.on { transition: none; } }
+.vau-explain .at-chain { margin-bottom: 0.25rem; }
+.vau-explain .at-chain code { font-family: var(--vx-mono); font-size: 0.72rem; }
+.vau-explain .at-row { margin: 0.2rem 0; max-width: none; }
+.vau-explain .at-lab { display: inline-block; min-width: 5.6em; margin-right: 0.3rem; font-family: var(--vx-mono); font-size: 0.56rem; letter-spacing: 1px; text-transform: uppercase; color: var(--vx-acc); }
+.vau-explain .at-prompt { color: var(--vx-dim); }
+.vau-explain .at-nl { color: var(--vx-dim); font-size: 0.8em; }
+.vau-explain .at-same { font-family: var(--vx-mono); font-size: 0.7rem; color: var(--vx-dim); }
+.vau-explain ins { text-decoration: none; color: var(--vx-green); }
+.vau-explain .at-cur { background: var(--vx-acc-soft); color: var(--vx-bright); outline: 1px solid var(--vx-acc); border-radius: 2px; }
+.vau-explain .at-src { margin-top: 0.3rem; font-family: var(--vx-mono); font-size: 0.56rem; letter-spacing: 0.4px; color: var(--vx-dim); }

@@ -1,0 +1,105 @@
+/* Vector Abliteration Units: the look of the Core Collection's cards.
+   Copyright (C) 2026 David M. Berry. SPDX-License-Identifier: GPL-3.0-or-later
+   A host draws each unit's strip with its own frame and top line (power, name, help and the
+   output summary), and puts the unit's controls, or a meter's screen, on a card inside it. For
+   a unit in the Core Collection (the units the vau package ships; the catalogue says
+   collection: "core") the card has the classes vau-card and vau-core, and the host draws the
+   card's parts with these --vu-* properties, each falling back to its own value
+   (var(--vu-knob-arc, <the host's own>)). The sheet sets nothing else, except the mark: the host
+   ends the card with <span class="vau-mark">VAU</span>, its footer. SPEC.md, section 5d, describes the look.
+   The look is a piece of studio hardware, photographed rather than drawn: a deep blue enamelled
+   faceplate with a fine grain, a bevel and two chrome screws at its foot; black fluted knobs,
+   lit from above, with a white pointer, set in a ring of printed white dots; white legends in
+   light capitals; red jewel lights; and a meter as a backlit amber face behind glass, in a black
+   bezel, with needles over a scale that turns red at the top. A very slight blur on the knobs,
+   the lights and the face, and a faint bloom on the legends, keep it from looking rendered. */
+.vau-core {
+  /* the faceplate: grain, two screws at the foot, and the enamel, darker toward the bottom */
+  --vu-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    radial-gradient(circle at 9px calc(100% - 9px), #f4f6f8 0, #b9bec6 1.3px, #6b7079 2.6px, #10204a 3.3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #f4f6f8 0, #b9bec6 1.3px, #6b7079 2.6px, #10204a 3.3px, transparent 4px),
+    linear-gradient(180deg, #24448c 0%, #1f3d80 45%, #1a356f 100%);
+  --vu-border: #0b1b42;
+  --vu-card-pad: 9px 7px 6px;
+  --vu-bevel: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 1px 0 0 rgba(255, 255, 255, 0.05), inset 0 -2px 4px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.45);
+  /* its legends: values, labels, and the quietest (notes) */
+  --vu-ink: #ffffff;
+  --vu-dim: #f1f4fa;
+  --vu-faint: #b9c8e6;
+  --vu-soft: 0 0 0.5px rgba(255, 255, 255, 0.35), 0 0 2px rgba(190, 210, 255, 0.12);   /* text-shadow: a faint bloom */
+  --vu-font: "Helvetica Neue", Helvetica, Arial, "Nimbus Sans", sans-serif;   /* a bold grotesque, as engraved legends */
+  --vu-value-font: "Helvetica Neue", Helvetica, Arial, "Nimbus Sans", sans-serif;
+  --vu-label-case: uppercase;
+  --vu-label-spacing: 0.07em;
+  --vu-label-weight: 500;
+  /* menus, text fields and small buttons: black, like the knobs */
+  --vu-field: linear-gradient(180deg, #1c1d21 0%, #0c0d10 100%);
+  --vu-field-edge: #05060a;
+  --vu-field-size: 9.5px;
+  --vu-field-font: "Helvetica Neue", Helvetica, Arial, "Nimbus Sans", sans-serif;
+  /* knobs: a lit black dome (the stops below), the rim is fluted, the scale is a ring of eleven dots (the track has pathLength 100),
+     and there is no arc: the pointer reads the value */
+  --vu-knob-body: transparent;
+  --vu-knob-hi: #4a4c53;     /* the dome card.js draws: highlight, body, shadow, rim */
+  --vu-knob-mid: #1c1d21;
+  --vu-knob-lo: #0a0b0c;
+  --vu-knob-rim: #000000;
+  --vu-knob-edge: #000000;
+  --vu-knob-edge-width: 2.4;
+  --vu-knob-flutes: 2.6 1.57;
+  --vu-knob-track: #ffffff;
+  --vu-knob-track-width: 1.9;
+  --vu-knob-dots: 0 10;
+  --vu-knob-arc: transparent;
+  --vu-knob-pointer: #ffffff;
+  --vu-knob-filter: drop-shadow(0 1.6px 1.3px rgba(0, 0, 0, 0.6)) blur(0.22px);
+  /* focus: no box on the faceplate; a soft white halo round the knob instead */
+  --vu-focus: none;
+  --vu-focus-glow: drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.85));
+  --vu-shadow: 0.6;   /* the knobs' and selectors' shadow (card.js draws it, with a very slight blur, on the body only) */
+  /* the scale printed around the large knobs and a selector's choices; a selector's edge */
+  --vu-scale: #f4f6fb;
+  --vu-switch-edge: #000000;
+  /* a fader, where a collection keeps one: its value, the printed rules, the slot and a chrome cap */
+  --vu-fader-value: #ffffff;
+  --vu-fader-rule: rgba(255, 255, 255, 0.42);
+  --vu-fader-slot: #04060c;
+  --vu-fader-slot-edge: #0b1b42;
+  --vu-fader-cap: linear-gradient(180deg, #f6f7f9 0%, #c9cdd3 45%, #9ca2ab 55%, #e1e4e8 100%);
+  --vu-fader-cap-shade: #80868f;
+  --vu-fader-cap-light: #ffffff;
+  /* lights on the card (a toggle's): a faceted red jewel in a chrome bezel, dark ruby when off */
+  --vu-led: radial-gradient(circle at 36% 30%, #c9a093 0 8%, #7c3b2d 30%, #3f140c 68%, #1c0704 100%);
+  --vu-led-edge: #c7cbd2;
+  --vu-led-edge-width: 2px;
+  --vu-led-shadow: 0 0 0 1px #23262c, inset 0 0 2px rgba(0, 0, 0, 0.7);
+  --vu-led-on: radial-gradient(circle at 36% 30%, #fff7e4 0 9%, #ffb27c 20%, #ff4f2b 42%, #c71b0c 66%, #600803 100%);
+  --vu-led-on-edge: #d5d8dd;
+  --vu-led-on-shadow: 0 0 0 1px #23262c, 0 0 6px 1px rgba(255, 84, 44, 0.75), 0 0 14px rgba(255, 64, 24, 0.45);
+  --vu-led-filter: blur(0.2px);
+  /* a meter's screen: a backlit amber face behind glass, in a black bezel */
+  --vu-screen:
+    linear-gradient(162deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.06) 36%, transparent 37%),
+    radial-gradient(ellipse 95% 90% at 50% 64%, #fdf0c4 0%, #f6dc9a 42%, #e6b86c 78%, #bf8642 100%);
+  --vu-screen-edge: #0a0a0b;
+  --vu-screen-edge-width: 3px;
+  --vu-screen-radius: 3px;
+  --vu-screen-shadow: inset 0 2px 5px rgba(50, 24, 0, 0.6), inset 0 0 12px rgba(120, 60, 0, 0.32), 0 1px 0 rgba(255, 255, 255, 0.14);
+  --vu-screen-filter: blur(0.18px);
+  --vu-screen-ink: #1b140b;
+  --vu-screen-dim: #5b4526;
+  --vu-screen-rule: rgba(43, 26, 6, 0.4);
+  --vu-screen-track: rgba(70, 40, 0, 0.14);
+  --vu-screen-bar: #1b140b;
+  --vu-screen-hot: #c9221a;
+  --vu-meter-needle: block;   /* a meter that reads one number per step is drawn as needles on a scale (display of the host's .needle) */
+  /* the mark */
+  --vu-mark: #e9effa;
+}
+.vau-core .vau-mark {   /* the card's footer: a faint VAU across its foot */
+  display: block; flex: none; align-self: stretch; margin-top: 4px; padding: 3px 0 0 0.32em;   /* the letter-spacing, so the word sits centred */
+  border-top: 1px solid rgba(255, 255, 255, 0.07); text-align: center;
+  font: 700 7px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.32em;
+  color: var(--vu-mark); opacity: 0.45; text-shadow: none; user-select: none; pointer-events: none;
+}

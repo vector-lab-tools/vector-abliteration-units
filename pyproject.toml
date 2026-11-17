@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vector-abliteration-units"
+version = "0.2.10"
+description = "Vector Abliteration Units (VAU): a standard for units that change what a model does from inside, and a host to load and run them"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "David M. Berry" }]
+requires-python = ">=3.10"
+dependencies = ["torch>=2.1", "numpy>=1.24"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.urls]
+Repository = "https://github.com/vector-lab-tools/vector-abliteration-units"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vau = ["units/*.py", "units/*.explain.js", "explain/*.js", "explain/*.css", "explain/*.json", "look/*.css", "look/*.json", "look/*.js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use Vector Abliteration Units in your work, please cite it as below."
+title: "Vector Abliteration Units (VAU): a standard for units that change what a model does from inside"
+abstract: >-
+  A unit standard and host library for operations on a model's activations and weights:
+  each unit is one file that declares its parameters and the kind of place in a model it
+  acts on, and a host loads, checks and runs units. Part of the Vector Lab family of
+  research instruments.
+type: software
+authors:
+  - family-names: Berry
+    given-names: David M.
+    affiliation: University of Sussex
+    orcid: "https://orcid.org/0000-0002-7737-5586"
+repository-code: "https://github.com/vector-lab-tools/vector-abliteration-units"
+license: GPL-3.0-or-later
+version: 0.2.10
+date-released: 2026-11-17

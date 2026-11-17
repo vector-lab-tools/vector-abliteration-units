@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vector Abliteration Units (VAU)</title>
+  <meta name="description" content="Vector Abliteration Units: a standard for units that change, or read, what a model does from inside, and the host library that loads and runs them. Part of the Vector Lab.">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#f3f2ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101217" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Vector Abliteration Units (VAU)">
+  <meta property="og:description" content="A standard for units that change, or read, what a model does from inside, and the host that loads and runs them.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vector-lab-tools.github.io/vector-abliteration-units/">
+  <script>(function(){try{var t=localStorage.getItem('vau-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vau-card.css">
+  <link rel="stylesheet" href="vau-core.css">
+</head>
+<body>
+<!-- Written by hand, except the unit cards between the units markers, which tools/build_site.py fills from the manifests.
+     Copyright (C) 2026 David M. Berry. SPDX-License-Identifier: GPL-3.0-or-later -->
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="Vector Abliteration Units, home">
+        <img src="logo.svg" alt="">
+        <span class="brand-block">
+          <span class="brand-name">VAU<span class="dot">·</span>1</span>
+          <span class="brand-tagline">Vector Abliteration Units</span>
+        </span>
+      </a>
+      <div class="head-tools">
+        <nav class="site-nav" aria-label="Site">
+          <a href="index.html" aria-current="page">Home</a>
+          <a href="spec.html">The standard</a>
+          <a href="units.html">Units</a>
+          <a href="https://github.com/vector-lab-tools/vector-abliteration-units">GitHub</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch between light and dark" title="Switch between light and dark">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <span class="kicker">Vector Lab · shared standard · VAU 1 · version 0.2.10</span>
+      <h1>Vector Abliteration Units</h1>
+      <p class="tagline">A standard for units that change, or read, what a model does from inside, and the host that loads and runs them.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="spec.html">The standard</a>
+        <a class="btn" href="units.html">The Core Collection</a>
+        <a class="btn" href="https://github.com/vector-lab-tools/vector-abliteration-units">Source on GitHub</a>
+      </div>
+      <div class="stats" aria-label="VAU in figures">
+        <div><b>VAU 1</b><span>The standard's version</span></div>
+        <div><b>16</b><span>Units in the Core Collection</span></div>
+        <div><b>4</b><span>Sites a unit can act on</span></div>
+        <div><b>10</b><span>Capabilities a host can offer</span></div>
+        <div><b>2,352</b><span>Lines of Python, host library and units</span></div>
+        <div><b>54</b><span>Tests passed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="content">
+
+    <section class="section wrap reveal" id="what">
+      <span class="num">01</span>
+      <h2>What it is</h2>
+      <p>A Vector Abliteration Unit is one Python file. It declares what it is (a manifest: its name, its parameters, the kind of place in a model it acts on, what it needs) and supplies a few functions. A host finds units, checks them, and runs the ones a user chains together.</p>
+      <p>The split is inspired by audio plugins such as Steinberg's VST, where a plugin declares its controls and a host decides where it runs.</p>
+      <p>A unit never touches the model directly. It asks its host for a place to act (the residual stream at a layer, the output of an attention layer), and the host registers the hook, measures how much it changes what it touches, and removes it after the run. Units name a kind of place, not a model. The host's adapter maps those places onto an architecture, so the same unit can run in a language model now and in a diffusion or audio model later.</p>
+      <figure class="diagram">
+        <a href="img/architecture.svg"><img src="img/architecture.svg" width="1290" height="560" alt="The architecture: a unit file (manifest and functions) is found and checked by the registry, run by a host that lists its capabilities, and reaches the model through an adapter. The language-model adapter is built; adapters for diffusion and audio models are marked as future. Beneath, the UnitContext through which a unit asks its host for places to act."></a>
+        <figcaption><b>The architecture.</b> A unit, the registry that finds and checks it, the host that runs it, and the adapter that maps its site onto one architecture. Solid boxes are built; dashed boxes are future work.</figcaption>
+      </figure>
+      <p>The standard is in <a href="spec.html">SPEC.md</a>. The package <code>vau</code> implements the host's side; <code>src/vau/units/</code> holds the built-in units, the Core Collection.</p>
+    </section>
+
+    <section class="section wrap reveal" id="units">
+      <span class="num">02</span>
+      <h2>The Core Collection</h2>
+      <p>The units the package ships are the Core Collection, sixteen of them: effects that act on the stream (vNorm Shrink, vTanh Squash, vLookback, vRunning Average, vQuantise, vRotate, vPrincipal Bands, vSparsify, vPosition Repeat, vBand Shrink and vComponent Clamp); vAbliterate, which removes a direction from what attention and MLPs write over a span of blocks; vMorph, a unit fitted to a direction's texts that changes what they write; vNeuron, which edits named MLP neurons; and two meters, vEntropy and vPeak share. Each declares the settings at which it changes nothing, and the tests check that those settings give back the stream unchanged. The <a href="units.html">units page</a> gives each one's parameters, ranges and neutral values, its help text, and the function it runs.</p>
+      <figure class="diagram">
+        <a href="img/units.svg"><img src="img/units.svg" width="2698" height="726" loading="lazy" alt="The built-in units drawn as strips on a mixing desk at the settings of their example lines: vNorm Shrink, vTanh Squash, vLookback, vRunning Average, vQuantise, vRotate and vPrincipal Bands, each with what it needs from a host below it."></a>
+        <figcaption><b>The Core Collection as strips</b>, at the settings of their example lines, with what each needs from a host. The green mark on a knob or fader is its neutral value. Drawn from the manifests by <code>tools/build_site.py</code>.</figcaption>
+      </figure>
+      <div class="cards">
+<!-- units:start -->
+        <a class="card" href="units.html#compressor"><h3><span class="vpre">v</span>Norm Shrink</h3><p>Above a threshold, reduces the stream&#x27;s size at each position by a ratio.</p><span class="after">stream · needs stream, stats</span></a>
+        <a class="card" href="units.html#saturator"><h3><span class="vpre">v</span>Tanh Squash</h3><p>Soft-clips each dimension of the stream, harder as the drive rises.</p><span class="after">stream · needs stream, stats</span></a>
+        <a class="card" href="units.html#delay"><h3><span class="vpre">v</span>Lookback</h3><p>Adds the stream from some positions back: an echo, with feedback.</p><span class="after">stream · needs stream, ordered</span></a>
+        <a class="card" href="units.html#reverb"><h3><span class="vpre">v</span>Running Average</h3><p>Adds a decaying average of the earlier positions.</p><span class="after">stream · needs stream, ordered</span></a>
+        <a class="card" href="units.html#erosion"><h3><span class="vpre">v</span>Quantise</h3><p>Quantises the stream to few levels, or holds it over several positions.</p><span class="after">stream · needs stream, ordered, stats</span></a>
+        <a class="card" href="units.html#shifter"><h3><span class="vpre">v</span>Rotate</h3><p>Rotates the stream in the plane of two directions.</p><span class="after">stream · needs stream, directions</span></a>
+        <a class="card" href="units.html#eq"><h3><span class="vpre">v</span>Principal Bands</h3><p>Scales three bands of the stream&#x27;s principal directions: low, mid, high.</p><span class="after">stream · needs stream, stats, pca</span></a>
+        <a class="card" href="units.html#beatrepeat"><h3><span class="vpre">v</span>Position Repeat</h3><p>In every run of positions, replays the stream of the few positions before over the last few: a stutter.</p><span class="after">stream · needs stream, ordered</span></a>
+        <a class="card" href="units.html#gate"><h3><span class="vpre">v</span>Sparsify</h3><p>Keeps only each position&#x27;s largest components and zeroes the rest, making the stream sparse.</p><span class="after">stream · needs stream</span></a>
+        <a class="card" href="units.html#limiter"><h3><span class="vpre">v</span>Component Clamp</h3><p>Clamps each position&#x27;s largest components at a ceiling set by a quantile of their sizes.</p><span class="after">stream · inspired by the winsorization of Heretic and OBLITERATUS · needs stream</span></a>
+        <a class="card" href="units.html#multiband"><h3><span class="vpre">v</span>Band Shrink</h3><p>Compresses the stream separately in three bands of its principal directions: low, mid, high.</p><span class="after">stream · needs stream, stats, pca</span></a>
+        <a class="card" href="units.html#morph"><h3><span class="vpre">v</span>Morph</h3><p>A learned change to what attention and MLPs write, fitted to move one side of a direction&#x27;s texts toward the other.</p><span class="after">component · inspired by the objective of Arbitrary-Rank Ablation in Heretic (Weidmann 2026) · needs output, texts, contrasts, directions</span></a>
+        <a class="card" href="units.html#abliterate"><h3><span class="vpre">v</span>Abliterate</h3><p>Removes a direction from what attention and MLPs write, with a strength that peaks at one block and tapers.</p><span class="after">component · inspired by directional ablation (Arditi et al. 2024) as abliteration tools apply it, with Heretic&#x27;s kernel and Lai&#x27;s refinements · needs output, stats, directions</span></a>
+        <a class="card" href="units.html#neuron"><h3><span class="vpre">v</span>Neuron</h3><p>Scales, adds to, sets, zeroes, flips or clamps single MLP neurons in one block.</p><span class="after">hidden · inspired by OBLITERATUS&#x27;s Neuron Lab · needs output</span></a>
+        <a class="card" href="units.html#entropy"><h3><span class="vpre">v</span>Entropy <span class="meterbadge">meter</span></h3><p>How uncertain the model is about the next token, in bits, step by step.</p><span class="after">logits · needs logits</span></a>
+        <a class="card" href="units.html#peakshare"><h3><span class="vpre">v</span>Peak share <span class="meterbadge">meter</span></h3><p>The share of the stream&#x27;s size held by its few largest components, step by step.</p><span class="after">stream · needs stream</span></a>
+<!-- units:end -->
+      </div>
+      <h3 class="look-h">The collection's look</h3>
+      <p>The Core Collection has a look of its own, which the package ships as one stylesheet (<code>vau.look_files()</code>, <a href="spec.html#5d-collections-and-their-look-host-presentation">SPEC.md, section 5d</a>): studio hardware, photographed rather than drawn. A deep blue enamelled faceplate with chrome screws, black fluted knobs with white pointers in a ring of printed dots, white legends in light capitals, red jewel lights, and meters as backlit amber faces with needles. A host draws each unit's strip with its own frame and top line (power, name, help and output summary, which VAU fills with the unit's help and suggested readings) and puts the unit's controls on a card inside it. On the card of a unit in the collection, marked <code>vau-core</code>, the stylesheet sets the <code>--vu-*</code> properties the host draws with, and the host adds a small VAU at the foot. Other collections can have looks of their own. Below, two units' cards, drawn live by VAU's card runtime as a host would mount them: turn the knobs and the selector. No model runs on this page, so the cards change only themselves; in a host they change the model, and on the <a href="units.html">units page</a> turning one shows GPT-2 small's text at the nearest setting it was run at.</p>
+      <div class="strip-mocks" aria-label="Two units' cards in the Core Collection's look, drawn live by VAU's card runtime: vNorm Shrink, with a layer knob, two knobs and a large threshold knob printed 0 to 10; and vBand Shrink, with a four-way rotary selector for its band and a large threshold knob.">
+<!-- cards:start -->
+        <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Shrink</b></div><div class="uc-card" data-vau-card="compressor" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;makeup&quot;: &quot;1&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><figcaption><i class="vpre">v</i>Norm Shrink</figcaption></figure>
+        <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Bandshrink</b></div><div class="uc-card" data-vau-card="multiband" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;band&quot;: &quot;all&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><figcaption><i class="vpre">v</i>Band Shrink</figcaption></figure>
+<!-- cards:end -->
+      </div>
+      <h3>Host features</h3>
+      <p>Every unit also has four controls the host applies around its change (<a href="spec.html">SPEC</a> section 5a): <b>wet</b>, an <b>envelope</b> over the depth (linear, bell or flat), <b>keep size</b>, and a <b>random control</b> that replaces each direction with a random one of the same size.</p>
+      <h3>Planned next</h3>
+      <ul>
+        <li><b>Adapters beyond language models</b>: diffusion and audio models.</li>
+      </ul>
+    </section>
+
+    <section class="section wrap reveal" id="write">
+      <span class="num">03</span>
+      <h2>Writing a unit</h2>
+      <p>A unit is a manifest and a function or two. A host draws a strip from the manifest: a knob for each <code>knob</code> or <code>int</code> parameter, the main control for the one <code>fader</code> (in the Core Collection a large knob), a menu for a target, a direction or a choice. It adds a power light and an activity meter to every strip.</p>
+      <figure class="diagram">
+        <a href="img/anatomy.svg"><img src="img/anatomy.svg" width="1370" height="640" loading="lazy" alt="The vNorm Shrink's manifest, abridged, beside the strip a host draws from it: the title becomes the strip's name, the site and targets its target menu and layer knob, the two knob parameters two knobs, the fader parameter the large knob. The host adds the power light and the activity meter."></a>
+        <figcaption><b>The anatomy of a unit.</b> The vNorm Shrink's manifest, beside the strip a host draws from it. Orange leads go from the manifest; blue marks what the host adds.</figcaption>
+      </figure>
+      <p>The smallest unit multiplies the stream by a number:</p>
+      <div class="term"><div class="label"><span class="raw">gain.py</span><span>A unit</span></div>
+<pre><code>UNIT = {
+    <span class="k">"vau"</span>: 1, <span class="k">"id"</span>: <span class="s">"gain"</span>, <span class="k">"title"</span>: <span class="s">"Gain"</span>, <span class="k">"what"</span>: <span class="s">"Multiplies the stream by k"</span>,
+    <span class="k">"category"</span>: <span class="s">"effect"</span>, <span class="k">"level"</span>: <span class="s">"model"</span>, <span class="k">"site"</span>: <span class="s">"stream"</span>, <span class="k">"targets"</span>: [<span class="s">"layer"</span>],
+    <span class="k">"params"</span>: [{<span class="k">"key"</span>: <span class="s">"k"</span>, <span class="k">"label"</span>: <span class="s">"k"</span>, <span class="k">"kind"</span>: <span class="s">"fader"</span>, <span class="k">"min"</span>: 0, <span class="k">"max"</span>: 4,
+                <span class="k">"default"</span>: 1, <span class="k">"neutral"</span>: 1}],
+    <span class="k">"example"</span>: <span class="s">"gain layer=6 k=2"</span>,
+}
+
+def edit(u, layer):
+    k = u.num(<span class="s">"k"</span>)
+    return lambda h, pos: h * k</code></pre></div>
+      <p>Put the file in your host's user folder and it appears with the Core Collection. To check it without a model:</p>
+      <div class="term"><div class="label"><span>Python</span><span>Conformance</span></div>
+<pre><code>import vau
+from vau.testing import conformance
+unit = vau.Registry([(<span class="s">"my_units"</span>, <span class="s">"user"</span>)]).load().get(<span class="s">"gain"</span>)
+print(conformance(unit) or <span class="s">"passes"</span>)</code></pre></div>
+      <p>The checks run the unit on a stand-in host with random statistics and directions: its manifest, its example line, that its edit keeps the stream's shape and dtype, and that its neutral values change nothing (<a href="spec.html#7-conformance">SPEC.md, section 7</a>).</p>
+      <p class="note">A unit is ordinary Python, so loading one runs it. Hosts load units only from local folders and mark those that are not built in.</p>
+    </section>
+
+    <section class="section wrap reveal" id="host">
+      <span class="num">04</span>
+      <h2>Using it in a host</h2>
+      <div class="term"><div class="label"><span>Terminal</span><span>This repository</span></div>
+<pre><span class="in">pip install -e .</span>
+<span class="c"># or, from a host:</span>
+<span class="in">pip install "vector-abliteration-units @ git+https://github.com/vector-lab-tools/vector-abliteration-units"</span>
+<span class="in">python -m pytest -q</span>
+<span class="out">...............                                                          [100%]</span>
+<span class="ok">15 passed</span></pre></div>
+      <p>A host subclasses <code>vau.Host</code>, says what it offers in <code>capabilities()</code>, and calls <code>vau.validate</code>, <code>vau.prepare</code>, <code>vau.attach</code> and <code>vau.code</code> for each unit in a chain. <code>vau.Registry(...).catalogue(capabilities)</code> gives its interface the manifests, with what each unit lacks on the loaded model.</p>
+      <p>A host reaches a model through an adapter, which maps a unit's site onto one architecture: the package's adapter covers GPT-2, Pythia and Llama-style language models. How a host lays a chain out (a desk of strips, a notebook, a server) is up to it.</p>
+    </section>
+
+    <section class="section wrap reveal" id="name">
+      <span class="num">05</span>
+      <h2>Where the name comes from</h2>
+      <p>"Abliteration" is the community's word for removing a direction from a model's weights or activations. It comes from the work that followed Arditi et al. (2024), who showed that refusal in chat models is mediated by a single direction in the residual stream. The two early community implementations were FailSpy's <a href="https://github.com/FailSpy/abliterator">abliterator</a> and Sumandora's <a href="https://github.com/Sumandora/remove-refusals-with-transformers">remove-refusals-with-transformers</a>. The second works through plain Hugging Face Transformers hidden states, which is why most later tools descend from it.</p>
+      <p>Maxime Labonne's Hugging Face article, <a href="https://huggingface.co/blog/mlabonne/abliteration">"Uncensor any LLM with abliteration"</a> (2024), carried the term further and is the inspiration for this project's name. In that literature the word means one operation, removing a refusal direction. VAU uses it in an extended sense, for any unit that changes what a model computes while it runs. Most of the units remove no direction (they rotate, compress, echo, add noise or apply a fitted change), the meters only read, and the units run on models never trained to refuse, such as GPT-2 small. They are tools for active divergence (<a href="https://arxiv.org/abs/2107.05599">Broad et al. 2021</a>), with ablation as one operation among them.</p>
+      <h3>Sources and inspiration</h3>
+      <ul>
+        <li>Arditi, A., Obeso, O., Syed, A., Paleka, D., Panickssery, N., Gurnee, W. and Nanda, N. (2024) <a href="https://arxiv.org/abs/2406.11717">Refusal in Language Models Is Mediated by a Single Direction</a>.</li>
+        <li>FailSpy, <a href="https://github.com/FailSpy/abliterator">abliterator</a>.</li>
+        <li>Sumandora, <a href="https://github.com/Sumandora/remove-refusals-with-transformers">remove-refusals-with-transformers</a>.</li>
+        <li>Broad, T., Berns, S., Colton, S. and Grierson, M. (2021) <a href="https://arxiv.org/abs/2107.05599">Active Divergence with Generative Deep Learning: A Survey and Taxonomy</a>, ICCC 2021.</li>
+        <li>Labonne, M. (2024) <a href="https://huggingface.co/blog/mlabonne/abliteration">Uncensor any LLM with abliteration</a>, Hugging Face.</li>
+        <li>Lai, J. (2025) <a href="https://huggingface.co/blog/grimjim/projected-abliteration">Projected abliteration</a> and <a href="https://huggingface.co/blog/grimjim/norm-preserving-biprojected-abliteration">Norm-preserving biprojected abliteration</a>, Hugging Face.</li>
+        <li>Weidmann, P. E. (2025) <a href="https://github.com/p-e-w/heretic">Heretic</a>, including Arbitrary-Rank Ablation. AGPL-3.0: VAU takes ideas from its descriptions, not its code.</li>
+        <li>elder-plinius, <a href="https://github.com/elder-plinius/OBLITERATUS">OBLITERATUS</a>. AGPL-3.0: likewise.</li>
+        <li>McGrath, T. et al. (2023) <a href="https://arxiv.org/abs/2307.15771">The Hydra Effect: Emergent Self-repair in Language Model Computations</a>.</li>
+        <li>Turner, A. et al. (2023) <a href="https://arxiv.org/abs/2308.10248">Activation Addition</a>; Rimsky, N. et al. (2024) <a href="https://arxiv.org/abs/2312.06681">Steering Llama 2 via Contrastive Activation Addition</a>.</li>
+        <li>Ableton Live's audio devices (its compressor, saturator, delay, reverb, erosion, frequency shifter, three-band EQ, gate, beat repeat, multiband dynamics and limiter), which inspired the vNorm Shrink, vTanh Squash, vLookback, vRunning Average, vQuantise, vRotate, vPrincipal Bands, vSparsify, vPosition Repeat, vBand Shrink and vComponent Clamp units, named here for what each does to the vectors; Steinberg's VST, which inspired the split between host and unit. VAU is not affiliated with Ableton or Steinberg.</li>
+      </ul>
+    </section>
+
+    <section class="section wrap reveal" id="links">
+      <span class="num">06</span>
+      <h2>Links</h2>
+      <div class="links">
+        <a href="https://github.com/vector-lab-tools/vector-abliteration-units"><b>Source</b><span>vector-lab-tools/vector-abliteration-units on GitHub</span></a>
+        <a href="spec.html"><b>The standard</b><span>VAU 1, from SPEC.md</span></a>
+        <a href="units.html"><b>The Core Collection</b><span>Each unit's manifest, parameters and code</span></a>
+        <a href="https://github.com/vector-lab-tools/diffusionatlas"><b>Diffusion Atlas</b><span>A sibling instrument, for diffusion models</span></a>
+        <a href="https://vector-lab-tools.github.io"><b>Vector Lab</b><span>Overview and map of the instruments</span></a>
+        <a href="https://github.com/vector-lab-tools/vector-abliteration-units/blob/main/CITATION.cff"><b>Citation</b><span>CITATION.cff</span></a>
+        <a href="https://github.com/vector-lab-tools/vector-abliteration-units/blob/main/LICENSE"><b>Licence</b><span>GNU General Public License, version 3 or later</span></a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Vector Abliteration Units 0.2.10 (VAU 1) · David M. Berry, University of Sussex · GPL-3.0-or-later · part of the <a href="https://github.com/vector-lab-tools">Vector Lab</a></p></div>
+  </footer>
+
+  <script src="site.js"></script>
+  <script src="vau-catalogue.js"></script>
+  <script src="vau-card.js"></script>
+  <script src="vau-cards.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* Vector Abliteration Units: the card's components (card.js), their layout and their parts.
+   Copyright (C) 2026 David M. Berry. SPDX-License-Identifier: GPL-3.0-or-later
+   Every colour, face and type is a --vu-* property, which the unit's collection sets on
+   .vau-<collection> (look/<collection>.css); each falls back to a plain dark look, so a card
+   outside any collection still works. Sizes: knob-small-1 30px, knob-1 42px, knob-big-1 and
+   knob-big-3 76px across their printed scale. See SPEC.md, section 5f. */
+.vau-card { display: flex; flex-direction: column; align-items: stretch; gap: 6px; box-sizing: border-box;
+  background: var(--vu-bg, #1e2128); border-top: 1px solid var(--vu-border, #2c303a); box-shadow: var(--vu-bevel, none);
+  color: var(--vu-ink, #e9eaee); text-shadow: var(--vu-soft, none); font-family: var(--vu-font, system-ui, sans-serif); font-size: 11px; }
+.vau-card .vc-body, .vau-card .vc-target { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+.vau-card .vc-main { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.vau-card .vc-row { display: flex; justify-content: center; gap: 2px; }
+.vau-card .vc-row-l { flex-wrap: wrap; gap: 4px; }
+.vau-card .vc-l { font-size: 10px; color: var(--vu-dim, #a7acb8); text-transform: var(--vu-label-case, none); letter-spacing: var(--vu-label-spacing, normal);
+  font-weight: var(--vu-label-weight, normal); text-align: center; line-height: 1.15; white-space: nowrap; }
+.vau-card .vc-v { font: 500 10.5px var(--vu-value-font, ui-monospace, monospace); color: var(--vu-ink, #e9eaee); text-align: center; cursor: text; }
+
+/* knobs */
+.vau-card .vc-knob { display: grid; justify-items: center; cursor: ns-resize; touch-action: none; user-select: none; padding: 0 2px; border-radius: 6px; }
+.vau-card .vc-knob:focus { outline: none; }
+.vau-card .vc-knob:focus-visible { outline: var(--vu-focus, 2px solid #d9aa3f); }
+.vau-card .vc-knob svg { overflow: visible; }
+.vau-card .vc-knob:focus-visible svg { filter: var(--vu-focus-glow, none); }
+.vau-card .vc-ks svg { width: 30px; height: 30px; }
+.vau-card .vc-km svg { width: 42px; height: 42px; }
+.vau-card .vc-kl svg { width: 76px; height: 76px; }
+.vau-card .vc-kl { gap: 2px; }
+.vau-card .vc-kl .vc-l { font-size: 10.5px; }
+.vau-card .vc-kl .vc-v { font-size: 11.5px; }
+.vau-card .vc-body { stroke: var(--vu-knob-edge, #3a3f4a); stroke-width: var(--vu-knob-edge-width, 1); stroke-dasharray: var(--vu-knob-flutes, none); }
+.vau-card .vc-track { fill: none; stroke: var(--vu-knob-track, #2f333d); stroke-width: var(--vu-knob-track-width, 3); stroke-dasharray: var(--vu-knob-dots, none); stroke-linecap: round; }
+.vau-card .vc-arc { fill: none; stroke: var(--vu-knob-arc, #d9aa3f); stroke-width: 3; stroke-linecap: round; }
+.vau-card .vc-ptr { stroke: var(--vu-knob-pointer, #e9eaee); stroke-width: 2.5; stroke-linecap: round; }
+.vau-card .vc-num, .vau-card .vc-opt { stroke: none; }
+.vau-card .vc-num { fill: var(--vu-scale, #a7acb8); font: 600 7.5px var(--vu-font, system-ui, sans-serif); }
+.vau-card .vc-knob-big-3 .vc-num { font-size: 6.5px; }
+
+/* a knob's and a selector's body: a dome lit from the upper left (the stops of card.js's gradient) */
+.vau-card .vc-g0 { stop-color: var(--vu-knob-hi, var(--vu-knob-body, #3a3f4a)); }
+.vau-card .vc-g1 { stop-color: var(--vu-knob-mid, var(--vu-knob-body, #2a2e37)); }
+.vau-card .vc-g2 { stop-color: var(--vu-knob-lo, var(--vu-knob-body, #23262d)); }
+.vau-card .vc-g3 { stop-color: var(--vu-knob-rim, var(--vu-knob-body, #1d2026)); }
+
+/* selectors */
+.vau-card .vc-sel { display: grid; justify-items: center; cursor: pointer; user-select: none; border-radius: 6px; }
+.vau-card .vc-sel:focus { outline: none; }
+.vau-card .vc-sel:focus-visible { outline: var(--vu-focus, 2px solid #d9aa3f); }
+.vau-card .vc-sel { justify-self: stretch; }
+.vau-card .vc-sel svg { width: 100%; max-width: 124px; height: auto; overflow: visible; }
+.vau-card .vc-opt { fill: var(--vu-scale, #a7acb8); font: 600 8.5px var(--vu-font, system-ui, sans-serif); letter-spacing: .04em; opacity: .55; text-transform: var(--vu-label-case, none); cursor: pointer; }
+.vau-card .vc-opt.on { opacity: 1; }
+.vau-card .vc-sw, .vau-card .vc-swbody { stroke: var(--vu-switch-edge, #3a3f4a); stroke-width: 1; }
+.vau-card .vc-sel .vc-ptr { stroke-width: 1.8; }
+.vau-card .vc-shadow { flood-color: #000; flood-opacity: var(--vu-shadow, .5); }
+
+/* menus, fields and lights */
+.vau-card .vc-menu-w, .vau-card .vc-field-w { display: grid; gap: 2px; }
+.vau-card .vc-menu-w .vc-l, .vau-card .vc-field-w .vc-l { text-align: left; }
+.vau-card .vc-menu, .vau-card .vc-field { width: 100%; box-sizing: border-box; font: var(--vu-field-size, 10.5px) var(--vu-field-font, ui-monospace, monospace);
+  background: var(--vu-field, #2a2e37); color: var(--vu-ink, #e9eaee); border: 1px solid var(--vu-field-edge, #3a3f4a); border-radius: 5px; padding: 3px 4px; }
+.vau-card .vc-light { display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: var(--vu-field-size, 10.5px); color: var(--vu-ink, #e9eaee);
+  background: var(--vu-field, #2a2e37); border: 1px solid var(--vu-field-edge, #3a3f4a); border-radius: 5px; padding: 2px 7px 2px 4px; cursor: pointer; }
+.vau-card .vc-light i { flex: none; width: 9px; height: 9px; box-sizing: border-box; border-radius: 50%; background: var(--vu-led, #444955);
+  border: var(--vu-led-edge-width, 1px) solid var(--vu-led-edge, #4a4f5b); box-shadow: var(--vu-led-shadow, none); filter: var(--vu-led-filter, none); }
+.vau-card .vc-light[aria-pressed="true"] i { background: var(--vu-led-on, #d9aa3f); border-color: var(--vu-led-on-edge, #d9aa3f); box-shadow: var(--vu-led-on-shadow, 0 0 6px #d9aa3f); }
+
+/* the host features' fold */
+.vau-card .vc-host { border-top: 1px solid rgba(255, 255, 255, .08); padding-top: 3px; display: flex; flex-direction: column; gap: 4px; }
+.vau-card .vc-host > summary { cursor: pointer; list-style: none; font-size: 9.5px; letter-spacing: .06em; color: var(--vu-faint, #8a8f9b); }
+.vau-card .vc-host > summary::-webkit-details-marker { display: none; }
+.vau-card .vc-host > summary::before { content: "▸ "; font-size: 8px; }
+.vau-card .vc-host[open] > summary::before { content: "▾ "; }
+.vau-card .vc-host > summary i { font-style: normal; color: var(--vu-led-on-edge, #d9aa3f); }
+
+/* fader-1, for a collection that keeps faders */
+.vau-card .vc-fader { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.vau-card .vc-fader .vc-v { color: var(--vu-fader-value, #d9aa3f); }
+.vau-card .vc-well { position: relative; flex: 1 1 0; min-height: 56px; max-height: 200px; width: 34px;
+  background: repeating-linear-gradient(to bottom, transparent 0 13px, var(--vu-fader-rule, #2f333d) 13px 14px); }
+.vau-card .vc-well input { position: absolute; inset: 0; width: 34px; height: 100%; margin: 0; writing-mode: vertical-lr; direction: rtl; appearance: none; -webkit-appearance: none; background: transparent; cursor: ns-resize; }
+.vau-card .vc-well input::-webkit-slider-runnable-track { width: 4px; background: var(--vu-fader-slot, #0d0f13); border: 1px solid var(--vu-fader-slot-edge, #343843); border-radius: 2px; }
+.vau-card .vc-well input::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 16px; margin-left: -14px; border-radius: 3px; background: var(--vu-fader-cap, #d7d9de);
+  border: 1px solid #0d0f13; box-shadow: inset 0 -3px 0 var(--vu-fader-cap-shade, #a9adb6), inset 0 2px 0 var(--vu-fader-cap-light, #fff); }
+
+/* meter-1: a needle meter */
+.vau-card .vc-needle, .vc-needle { display: block; width: 100%; height: auto; }
+.vc-needle .ns, .vc-needle .nz { fill: none; stroke-width: 1.2; } .vc-needle .ns { stroke: var(--vu-screen-ink, #c9ccd3); } .vc-needle .nz { stroke: var(--vu-screen-hot, #d9aa3f); stroke-width: 3.2; }
+.vc-needle .ni { stroke: var(--vu-screen-ink, #c9ccd3); stroke-width: 1; } .vc-needle .nh { stroke: var(--vu-screen-hot, #d9aa3f); stroke-width: 1.2; }
+.vc-needle .no, .vc-needle .nb { stroke-width: 1.3; stroke-linecap: round; } .vc-needle .no { stroke: var(--vu-screen-bar, #8a8f9b); } .vc-needle .nb { stroke: var(--vu-screen-hot, #d9aa3f); }
+.vc-needle .nu { fill: var(--vu-screen-ink, #c9ccd3); font: 700 9px var(--vu-font, system-ui, sans-serif); letter-spacing: .08em; text-transform: uppercase; }
+
+/* the mark: the card's footer (its look comes from the collection) */
+.vau-card > .vau-mark { margin-top: auto; }

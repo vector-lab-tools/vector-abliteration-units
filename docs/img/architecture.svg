@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1290 560" width="1290" height="560" role="img" aria-labelledby="t d">
+<title id="t">The architecture of Vector Abliteration Units</title>
+<desc id="d">A unit file (its manifest and functions) is found and checked by the registry, run by a host that says what it offers in its capabilities, and reaches the model through an adapter that maps the sites onto one architecture. The adapter for language models is built, in the package; adapters for diffusion and audio models are future work. Beneath, the UnitContext through which a unit asks its host for places to act.</desc>
+<!-- Copyright (C) 2026 David M. Berry. SPDX-License-Identifier: GPL-3.0-or-later -->
+<style>
+  text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .bg { fill: #fcfcfb; stroke: #e2e0da; }
+  .box { fill: #f3f2ee; stroke: #cfccc3; }
+  .inner { fill: #fcfcfb; stroke: #dedbd3; }
+  .built { fill: #f3f2ee; stroke: #a2600c; stroke-width: 1.6; }
+  .future { fill: none; stroke: #9a988f; stroke-width: 1.4; stroke-dasharray: 6 5; }
+  .ink { fill: #1d1e22; } .dim { fill: #66655f; } .acc { fill: #9a5a08; } .head { fill: #66655f; font-size: 12px; letter-spacing: 2px; }
+  .rule { stroke: #dedbd3; }
+  .chip { fill: #fcfcfb; stroke: #cfccc3; }
+  .arrow { stroke: #a2600c; stroke-width: 1.8; fill: none; }
+  .arrow-f { stroke: #9a988f; stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+  .tip { fill: #a2600c; } .tip-f { fill: #9a988f; }
+  .band { fill: #f3f2ee; stroke: #2a78d6; stroke-width: 1.4; } .blue { fill: #2a78d6; } .barrow { stroke: #2a78d6; stroke-width: 1.6; fill: none; }
+  .tip-b { fill: #2a78d6; }
+  @media (prefers-color-scheme: dark) {
+    .bg { fill: #14171e; stroke: #232833; }
+    .box { fill: #1a1e27; stroke: #2f3542; }
+    .inner { fill: #12151c; stroke: #2a2f3a; }
+    .built { fill: #1a1e27; stroke: #e3a43c; }
+    .future { stroke: #6f7686; }
+    .ink { fill: #e4e6ec; } .dim { fill: #9aa0ad; } .acc { fill: #e3a43c; } .head { fill: #9aa0ad; }
+    .rule { stroke: #2a2f3a; }
+    .chip { fill: #12151c; stroke: #343a48; }
+    .arrow { stroke: #e3a43c; } .tip { fill: #e3a43c; }
+    .arrow-f { stroke: #6f7686; } .tip-f { fill: #6f7686; }
+    .band { fill: #12151c; stroke: #6aa8f5; } .blue { fill: #6aa8f5; } .barrow { stroke: #6aa8f5; } .tip-b { fill: #6aa8f5; }
+  }
+</style>
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="tip" d="M0 0 L10 5 L0 10 z"/></marker>
+  <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="tip-f" d="M0 0 L10 5 L0 10 z"/></marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="tip-b" d="M0 0 L10 5 L0 10 z"/></marker>
+</defs>
+<rect class="bg" x="0.5" y="0.5" width="1289" height="559" rx="14"/>
+
+<!-- column heads -->
+<text class="head" x="24" y="46">1 · THE UNIT</text>
+<text class="head" x="304" y="46">2 · REGISTRY AND CHECKS</text>
+<text class="head" x="576" y="46">3 · THE HOST</text>
+<text class="head" x="868" y="46">4 · ADAPTER</text>
+<text class="head" x="1096" y="46">5 · MODEL</text>
+
+<!-- 1 the unit file -->
+<rect class="box" x="24" y="64" width="240" height="336" rx="10"/>
+<text class="mono acc" x="40" y="92" style="font-size:15px;font-weight:700">compressor.py</text>
+<text class="dim" x="40" y="112">one Python file</text>
+<rect class="inner" x="40" y="126" width="208" height="152" rx="6"/>
+<text class="mono acc" x="54" y="150">UNIT = { … }</text>
+<text class="ink" x="54" y="174">the manifest: id, title,</text>
+<text class="ink" x="54" y="192">what, category, level,</text>
+<text class="ink" x="54" y="210">site, targets, requires,</text>
+<text class="ink" x="54" y="228">params (ranges, defaults,</text>
+<text class="ink" x="54" y="246">neutral values), example,</text>
+<text class="ink" x="54" y="264">help, after</text>
+<rect class="inner" x="40" y="290" width="208" height="96" rx="6"/>
+<text class="mono acc" x="54" y="314">functions</text>
+<text class="mono ink" x="54" y="336" style="font-size:12.5px">validate(u)  prepare(u)</text>
+<text class="mono ink" x="54" y="355" style="font-size:12.5px">edit(u, layer) or attach(u)</text>
+<text class="mono ink" x="54" y="374" style="font-size:12.5px">read(u, …)  code(u)</text>
+
+<!-- 2 the registry -->
+<rect class="box" x="304" y="64" width="232" height="336" rx="10"/>
+<text class="mono acc" x="320" y="92" style="font-size:15px;font-weight:700">vau.Registry</text>
+<text class="dim" x="320" y="112">finds units and checks them</text>
+<text class="ink" x="320" y="142">The built-in units, then the</text>
+<text class="ink" x="320" y="160">folders the host adds</text>
+<line class="rule" x1="320" y1="176" x2="520" y2="176"/>
+<text class="ink" x="320" y="198"><tspan class="mono acc" style="font-size:13px">vau.check</tspan>: the VAU version,</text>
+<text class="ink" x="320" y="216">a unique id, the kinds and</text>
+<text class="ink" x="320" y="234">ranges, the functions</text>
+<line class="rule" x1="320" y1="250" x2="520" y2="250"/>
+<text class="ink" x="320" y="272">A unit that fails is left out</text>
+<text class="ink" x="320" y="290">and listed with its reason</text>
+<line class="rule" x1="320" y1="306" x2="520" y2="306"/>
+<text class="mono acc" x="320" y="328" style="font-size:13px">catalogue(capabilities)</text>
+<text class="ink" x="320" y="350">the manifests, with what</text>
+<text class="ink" x="320" y="368">each unit lacks on this host</text>
+
+<!-- 3 the host -->
+<rect class="box" x="576" y="64" width="252" height="336" rx="10"/>
+<text class="mono acc" x="592" y="92" style="font-size:15px;font-weight:700">vau.Host</text>
+<text class="dim" x="592" y="112">subclassed by an application</text>
+<text class="mono ink" x="592" y="142" style="font-size:13px">capabilities()</text>
+<g class="mono" style="font-size:12px">
+  <rect class="chip" x="592" y="154" width="70" height="22" rx="4"/><text class="ink" x="627" y="169" text-anchor="middle" style="font-size:12px">stream</text>
+  <rect class="chip" x="668" y="154" width="70" height="22" rx="4"/><text class="ink" x="703" y="169" text-anchor="middle" style="font-size:12px">output</text>
+  <rect class="chip" x="744" y="154" width="70" height="22" rx="4"/><text class="ink" x="779" y="169" text-anchor="middle" style="font-size:12px">weights</text>
+  <rect class="chip" x="592" y="182" width="70" height="22" rx="4"/><text class="ink" x="627" y="197" text-anchor="middle" style="font-size:12px">logits</text>
+  <rect class="chip" x="668" y="182" width="70" height="22" rx="4"/><text class="ink" x="703" y="197" text-anchor="middle" style="font-size:12px">ordered</text>
+  <rect class="chip" x="744" y="182" width="70" height="22" rx="4"/><text class="ink" x="779" y="197" text-anchor="middle" style="font-size:12px">stats</text>
+  <rect class="chip" x="592" y="210" width="70" height="22" rx="4"/><text class="ink" x="627" y="225" text-anchor="middle" style="font-size:12px">pca</text>
+  <rect class="chip" x="668" y="210" width="70" height="22" rx="4"/><text class="ink" x="703" y="225" text-anchor="middle" style="font-size:12px">directions</text>
+  <rect class="chip" x="744" y="210" width="70" height="22" rx="4"/><text class="ink" x="779" y="225" text-anchor="middle" style="font-size:12px">texts</text>
+</g>
+<line class="rule" x1="592" y1="248" x2="812" y2="248"/>
+<text class="ink" x="592" y="270">Registers each hook a unit asks</text>
+<text class="ink" x="592" y="288">for, measures how much it</text>
+<text class="ink" x="592" y="306">changes what it touches, and</text>
+<text class="ink" x="592" y="324">removes it after the run</text>
+<line class="rule" x1="592" y1="340" x2="812" y2="340"/>
+<text class="dim" x="592" y="362">Any host: a desk, a</text>
+<text class="ink" x="592" y="381">notebook, a server</text>
+
+<!-- 4 adapters -->
+<rect class="built" x="868" y="64" width="196" height="104" rx="10"/>
+<text class="ink" x="884" y="90" style="font-size:15px;font-weight:700">Language models</text>
+<text class="ink" x="884" y="112">GPT-2, Pythia and</text>
+<text class="ink" x="884" y="130">Llama-style models</text>
+<text class="acc" x="884" y="155" style="font-size:12px"><tspan style="letter-spacing:1px">BUILT</tspan> in the package</text>
+<rect class="future" x="868" y="180" width="196" height="104" rx="10"/>
+<text class="dim" x="884" y="206" style="font-size:15px;font-weight:700">Diffusion models</text>
+<text class="dim" x="884" y="228">a later adapter offering</text>
+<text class="dim" x="884" y="246">the same capabilities</text>
+<text class="dim" x="884" y="271" style="font-size:12px;letter-spacing:1px">FUTURE</text>
+<rect class="future" x="868" y="296" width="196" height="104" rx="10"/>
+<text class="dim" x="884" y="322" style="font-size:15px;font-weight:700">Audio models</text>
+<text class="dim" x="884" y="344">a later adapter offering</text>
+<text class="dim" x="884" y="362">the same capabilities</text>
+<text class="dim" x="884" y="387" style="font-size:12px;letter-spacing:1px">FUTURE</text>
+
+<!-- 5 models -->
+<rect class="built" x="1096" y="64" width="170" height="104" rx="10"/>
+<text class="ink" x="1112" y="88" style="font-size:15px;font-weight:700">Transformer</text>
+<text class="ink" x="1112" y="109" style="font-size:13px">its residual stream,</text>
+<text class="ink" x="1112" y="126" style="font-size:13px">attention and MLP</text>
+<text class="ink" x="1112" y="143" style="font-size:13px">outputs, weights</text>
+<text class="ink" x="1112" y="160" style="font-size:13px">and logits</text>
+<rect class="future" x="1096" y="180" width="170" height="104" rx="10"/>
+<text class="dim" x="1112" y="206" style="font-size:15px;font-weight:700">Diffusion</text>
+<text class="dim" x="1112" y="224" style="font-size:15px;font-weight:700">transformer</text>
+<text class="dim" x="1112" y="246">its hidden states</text>
+<text class="dim" x="1112" y="264">as the stream</text>
+<rect class="future" x="1096" y="296" width="170" height="104" rx="10"/>
+<text class="dim" x="1112" y="322" style="font-size:15px;font-weight:700">Audio model</text>
+
+<!-- arrows -->
+<path class="arrow" d="M264 232 L302 232" marker-end="url(#a)"/>
+<path class="arrow" d="M536 232 L574 232" marker-end="url(#a)"/>
+<path class="arrow" d="M828 116 L866 116" marker-end="url(#a)"/>
+<path class="arrow-f" d="M828 232 L866 232" marker-end="url(#af)"/>
+<path class="arrow-f" d="M828 348 L866 348" marker-end="url(#af)"/>
+<path class="arrow" d="M1064 116 L1094 116" marker-end="url(#a)"/>
+<path class="arrow-f" d="M1064 232 L1094 232" marker-end="url(#af)"/>
+<path class="arrow-f" d="M1064 348 L1094 348" marker-end="url(#af)"/>
+
+<!-- what the unit sees: the UnitContext -->
+<path class="barrow" d="M144 400 L144 428" marker-end="url(#ab)"/>
+<path class="barrow" d="M702 430 L702 402" marker-end="url(#ab)"/>
+<rect class="band" x="24" y="432" width="804" height="100" rx="10"/>
+<text class="mono blue" x="40" y="458" style="font-size:14px;font-weight:700">UnitContext u</text>
+<text class="dim" x="160" y="458">what a unit sees: one strip of a chain, and its host</text>
+<text class="mono ink" x="40" y="484" style="font-size:12.5px">u.num(key)  u.int(key)  u.str(key)  ·  u.stats()  u.pca(layer)  u.direction(key)  u.memory(layer)</text>
+<text class="mono ink" x="40" y="503" style="font-size:12.5px">u.hook_stream(make)  u.hook_output(module, fn)  u.hook_input(module, fn)  u.on_restore(fn)</text>
+<text class="ink" x="40" y="522" style="font-size:13px">A unit asks its host for places to act through u. It never registers a hook on the model itself.</text>
+
+<!-- legend -->
+<rect class="built" x="868" y="448" width="26" height="14" rx="3"/>
+<text class="dim" x="904" y="460">built</text>
+<rect class="future" x="868" y="472" width="26" height="14" rx="3"/>
+<text class="dim" x="904" y="484">future</text>
+<text class="dim" x="868" y="512" style="font-size:13px">Units name a site, not a model; the adapter</text>
+<text class="dim" x="868" y="529" style="font-size:13px">maps the sites onto one architecture.</text>
+</svg>
