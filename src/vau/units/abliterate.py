@@ -40,9 +40,9 @@ UNIT = {
     "params": [
         {"key": "dir", "label": "Direction", "tip": "v = unit(dir) at the layer each block writes into", "kind": "direction", "required": True},
         {"key": "shape", "label": "Shape", "tip": "how s(l) falls from the peak: linear, bell or flat", "kind": "choice", "choices": ["linear", "bell", "flat"], "default": "linear"},
-        {"key": "peak", "label": "Peak", "tip": "s(l) is largest at l = peak × (depth − 1)", "kind": "knob", "min": 0, "max": 1, "default": 0.7, "step": 0.01},
-        {"key": "width", "label": "Width", "tip": "s(l) = 0 beyond width × (depth − 1) from the peak", "kind": "knob", "min": 0.05, "max": 1, "default": 0.4, "step": 0.01},
-        {"key": "edge", "label": "Edge", "tip": "s at the edge of the reach = edge × s(peak)", "kind": "knob", "min": 0, "max": 1, "default": 0.3, "step": 0.01},
+        {"key": "peak", "label": "Peak", "tip": "s(l) is largest at l = peak × (depth − 1)", "kind": "knob", "min": 0, "max": 1, "default": 0.7, "step": 0.01, "when": {"shape": ["linear", "bell"]}},
+        {"key": "width", "label": "Width", "tip": "s(l) = 0 beyond width × (depth − 1) from the peak", "kind": "knob", "min": 0.05, "max": 1, "default": 0.4, "step": 0.01, "when": {"shape": ["linear", "bell"]}},
+        {"key": "edge", "label": "Edge", "tip": "s at the edge of the reach = edge × s(peak)", "kind": "knob", "min": 0, "max": 1, "default": 0.3, "step": 0.01, "when": {"shape": ["linear", "bell"]}},
         {"key": "share", "label": "MLP share", "tip": "s_mlp(l) = share × s(l)", "kind": "knob", "min": 0, "max": 1, "default": 0.5, "step": 0.01},
         {"key": "projected", "label": "Projected", "tip": "v ← unit(v − (v·μ̂) μ̂),  μ = the stream's mean", "kind": "toggle", "default": 1},
         {"key": "size", "label": "Keep size", "tip": "rows of (I − s vvᵀ) W rescaled to ‖Wᵢ‖", "kind": "toggle", "default": 1},

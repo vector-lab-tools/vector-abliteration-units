@@ -44,8 +44,11 @@ class StandInHost(Host):
 
     name = "stand-in"
 
-    def __init__(self, layers: int = 4, d: int = 32, seed: int = 0):
-        self.n, self.d = layers, d
+    def sink(self) -> bool:
+        return self._sink
+
+    def __init__(self, layers: int = 4, d: int = 32, seed: int = 0, sink: bool = True):
+        self.n, self.d, self._sink = layers, d, sink
         g = np.random.default_rng(seed)
         self._stats = {"mean": g.normal(size=(layers + 1, d)).astype(np.float32),
                        "std": np.abs(g.normal(1, 0.2, size=(layers + 1, d))).astype(np.float32),

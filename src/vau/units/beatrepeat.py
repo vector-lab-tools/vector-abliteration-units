@@ -18,32 +18,34 @@ UNIT = {
     "summary": {"reads": "change", "label": "replaced"},     # what a host's summary of the strip shows (SPEC 5e)
     "help": "The positions after the first are taken in runs of <i>interval</i>; over the last <i>length</i> "
             "positions of each run, the stream is replaced (by <i>mix</i>) with the stream of the <i>length</i> "
-            "positions just before them, so that stretch is heard twice. The first position, an attention sink, "
-            "is neither changed nor replayed. Mix 0 is neutral.",
+            "positions just before them, so that stretch is heard twice. Where the model has an attention sink at the first position (most "
+            "language models), that position is neither changed nor replayed. Mix 0 is neutral.",
     "version": "1.0", "author": "David M. Berry", "licence": "GPL-3.0-or-later",
 }
 
 
-def beatrepeat_edit(interval: int, length: int, mix: float, kept: Dict[int, torch.Tensor]):
-    """Over the last `length` positions of each run of `interval` (from position 1), the stream is
-    moved toward the stream `length` positions back, as it was before this edit."""
+def beatrepeat_edit(interval: int, length: int, mix: float, kept: Dict[int, torch.Tensor], first: int = 1):
+    """Over the last `length` positions of each run of `interval` (from position `first`: 1 where
+    position 0 is an attention sink, else 0), the stream is moved toward the stream `length`
+    positions back, as it was before this edit. Only the last `length` positions are kept."""
     length = min(length, interval - 1)
 
     def edit(h, pos):
         x = h.float()
         out = x.clone()
         for j, p in enumerate(pos.tolist()):
-            if p < 1:
+            if p < first:
                 continue
             kept[p] = x[0, j].clone()
-            if (p - 1) % interval >= interval - length and (p - length) in kept and p - length >= 1:
+            if (p - first) % interval >= interval - length and (p - length) in kept and p - length >= first:
                 out[0, j] = (1 - mix) * x[0, j] + mix * kept[p - length]
+            kept.pop(p - length, None)
         return out.to(h.dtype)
     return edit
 
 
 def edit(u, layer):
-    return beatrepeat_edit(max(2, u.int("interval")), max(1, u.int("length")), min(1.0, max(0.0, u.num("mix"))), u.memory(layer))
+    return beatrepeat_edit(max(2, u.int("interval")), max(1, u.int("length")), min(1.0, max(0.0, u.num("mix"))), u.memory(layer), 1 if u.sink else 0)
 
 
 def code(u):

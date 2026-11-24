@@ -44,6 +44,7 @@ import vau  # noqa: E402
 import vau.explain  # noqa: E402
 import vau.look  # noqa: E402
 import vau.collection  # noqa: E402
+import vau.presets  # noqa: E402
 from vau.context import UnitContext  # noqa: E402
 from vau.testing import StandInHost, conformance, line  # noqa: E402
 
@@ -309,6 +310,31 @@ def example_values(u) -> dict:
 TARGET_WORDS = {"layer": "the residual stream at layer", "block": "block", "head": "head", "attn": "attention at block", "mlp": "the MLP at block"}
 
 
+HEARD = {"time": "frame to frame", "centroid": "brightness", "level": "level", "shape": "spectral shape"}
+
+
+def presets_table(u) -> str:
+    """The unit's presets on each model VAU has measured (src/vau/presets), as a table: name, line,
+    tip and what moved beyond chance on the held-out seeds; the one to start at is marked."""
+    import json as _json
+    out = []
+    for path in vau.presets.files().values():
+        d = _json.loads(path.read_text(encoding="utf-8"))
+        got = d["units"].get(u.id)
+        if not got:
+            continue
+        rows = "".join(
+            f'<tr><td>{esc(p["name"])}{" <span class=\"chip\">start</span>" if p["name"] == got.get("start") else ""}</td><td><code>{esc(p["line"])}</code></td>'
+            f'<td>{esc(p["tip"])}</td><td>{esc(", ".join(HEARD.get(h, h) for h in (p["held_out"].get("heard") or [])) or "none beyond chance")}</td></tr>'
+            for p in got["presets"])
+        h = d["measured"]
+        out.append(f'<h3>Presets on {esc(d["model"]["name"])}</h3>\n<p class="small">{len(got["presets"])} presets measured on {esc(d["model"]["name"])}, a {esc(d["model"].get("kind", ""))} model, '
+                   f'each kept only if it broke the output on none of {got["presets"][0]["held_out"]["n"]} held-out seeds; the last column says which measures moved the same way beyond chance there. '
+                   f'Presets are per model: on another model the same line can do something else.</p>\n'
+                   f'<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody>{rows}</tbody></table></div>')
+    return "\n".join(out)
+
+
 def card_frame(u, caption=False, hint=False) -> str:
     """A unit's strip as a host might frame it, with a plain top line (its power light and name),
     and below it the unit's card, which vau-cards.js has VAU's card.js draw, at the settings of
@@ -400,6 +426,7 @@ def build_units():
         if src:
             code_block += (f'\n<div class="term"><div class="label"><span class="raw">{esc(u.path.name)}</span><span>The function it uses</span></div>'
                            f'<pre><code>{esc(src.rstrip())}</code></pre></div>')
+        presets_block = presets_table(u)
         refs = "".join(f"<li>{esc(r)}</li>" for r in m.get("references", []))
         badge = '<span class="meterbadge" title="A meter: it reads the model and leaves it unchanged">meter</span>' if m["category"] == "meter" else ""
         sections.append(f"""      <article class="unit reveal" id="{u.id}">
@@ -433,6 +460,7 @@ def build_units():
         <p class="help">{m.get("help", "")}</p>
         {"<h3>References</h3><ul>" + refs + "</ul>" if refs else ""}
         {code_block}
+        {presets_block}
         </details>
       </article>""")
     content = f"""    <svg width="0" height="0" style="position:absolute" aria-hidden="true">{CORE_DEFS}</svg>

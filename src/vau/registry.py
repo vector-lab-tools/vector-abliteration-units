@@ -122,12 +122,25 @@ class Registry:
             self.load()
         return iter(self.units.values())
 
-    def catalogue(self, capabilities: Optional[Iterable[str]] = None) -> Dict[str, Any]:
+    def catalogue(self, capabilities: Optional[Iterable[str]] = None, model: Optional[str] = None) -> Dict[str, Any]:
+        """The units' public entries, the host features, the collections and their interfaces, and
+        the loading errors. Given the host's model (its id or name), each unit that has presets
+        measured on that model also carries them (`presets`, and `start`, the one to begin at),
+        and `presets` at the top says which model and how they were measured (SPEC 5g)."""
         if not self.loaded:
             self.load()
         caps = list(capabilities) if capabilities is not None else None
         from .hostfx import HOST_PARAMS
         from .collection import COLLECTIONS, interface
         collections = {cid: {"title": c["title"], "prefix": c.get("prefix", ""), "interface": interface(cid)} for cid, c in COLLECTIONS.items()}
-        return {"vau": VAU_VERSION, "units": [u.public(caps) for u in self.units.values()],
-                "host_params": HOST_PARAMS, "collections": collections, "errors": list(self.errors)}
+        units = [u.public(caps) for u in self.units.values()]
+        out = {"vau": VAU_VERSION, "units": units, "host_params": HOST_PARAMS, "collections": collections, "errors": list(self.errors)}
+        from .presets import for_model
+        ps = for_model(model)
+        if ps:
+            out["presets"] = {"model": ps["model"], "measured": ps["measured"]}
+            for e in units:
+                got = ps["units"].get(e["id"])
+                if got:
+                    e["presets"], e["start"] = got["presets"], got.get("start")
+        return out

@@ -11,7 +11,7 @@
 
 **Author:** David M. Berry  
 **Institution:** University of Sussex  
-**Version:** 0.2.10 (VAU 1), in development  
+**Version:** 0.3.0 (VAU 1), in development  
 **Licence:** GNU General Public License, version 3 or later (GPL-3.0-or-later). See `LICENSE`.  
 **Site:** <https://vector-lab-tools.github.io/vector-abliteration-units/>, the standard, the built-in units and the figures (from `docs/`)
 
@@ -109,6 +109,10 @@ A unit is ordinary Python, so loading one runs it. Hosts load units only from lo
 A unit may also come with an explainer, `gain.explain.js` beside `gain.py`: an animated figure of what it computes, which a host shows as the unit's help (Abliteration Lens opens it from the (?) on the strip) and which the units page draws. The built-in units each have one, in `src/vau/units/`; the runtime that draws them is `src/vau/explain/explain.js`. SPEC.md, section 5c, says how to write one, and `vau.explain_files(registry)` gives a host the files to serve.
 
 The built-in units are the **Core Collection**. A host draws each unit's strip with its own frame and top line (power, name, help and output summary, which VAU fills with the unit's help, explainer and suggested readings), and puts the unit's controls on a card inside it, drawn in the collection's look. The Core Collection's look is inspired by blue-panelled valve-era studio hardware: a deep blue enamelled faceplate with chrome screws, black fluted knobs with white pointers in a ring of printed dots, white legends in light capitals, red jewel lights, meters as backlit amber faces with needles, and a small VAU at the card's foot. The package ships it as one stylesheet, `src/vau/look/core.css`, which sets only `--vu-*` properties on `.vau-core` and the mark; `vau.look_files()` names it for a host to serve, and each unit's catalogue entry names its collection. SPEC.md, section 5d, describes the look and how a host uses it. VAU also draws the card itself: `src/vau/look/card.js` (`VAUCard.mount`) draws a unit's controls from a standard set of components (large and small knobs, rotary selectors, lamps, menus, a needle meter), as the collection's interface (`core.json`) maps them, and a host passes it the line's values, the model's ranges and a callback (SPEC.md, section 5f). Other collections, with interfaces of their own, can follow.
+
+**Presets, by model.** A setting that bends one model well can silence another, so VAU keeps presets per model, measured on it: `src/vau/presets/`. The first set is 75 presets for 12 units on Magenta RT 2 small, a music model, each kept only if it broke the sound on none of ten seeds it was not chosen on (for example Ghost Trail, `delay layer=6 time=4 feedback=0.3 mix=0.2 keepnorm=1`), with the preset each unit should start at there. A host that tells `Registry.catalogue(...)` its model gets them with each unit, and the card lists them in a menu. SPEC.md, section 5g.
+
+**Models without an attention sink.** Several units leave a language model's first position alone, its attention sink. A host whose model has none there (an audio model, whose first position is its first frame) says so with `Host.sink()`, and the units bend it like any other. A parameter may also apply only in some settings (`when`): vAbliterate's peak, width and edge while its shape is not flat, *sink too* only where there is a sink. The card dims or leaves out what does not apply. The Core Collection's interface groups its units by what they act on (along time, on the stream's size, coordinate by coordinate, along directions, inside a block, meters).
 
 ## Using it in a host
 

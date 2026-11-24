@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vector-abliteration-units"
-version = "0.2.10"
+version = "0.3.0"
 description = "Vector Abliteration Units (VAU): a standard for units that change what a model does from inside, and a host to load and run them"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -23,7 +23,7 @@ Repository = "https://github.com/vector-lab-tools/vector-abliteration-units"
 where = ["src"]
 
 [tool.setuptools.package-data]
-vau = ["units/*.py", "units/*.explain.js", "explain/*.js", "explain/*.css", "explain/*.json", "look/*.css", "look/*.json", "look/*.js"]
+vau = ["units/*.py", "units/*.explain.js", "explain/*.js", "explain/*.css", "explain/*.json", "look/*.css", "look/*.json", "look/*.js", "presets/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

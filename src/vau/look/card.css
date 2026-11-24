@@ -91,3 +91,9 @@
 
 /* the mark: the card's footer (its look comes from the collection) */
 .vau-card > .vau-mark { margin-top: auto; }
+
+/* a control that does not apply while another has the value it has (manifest: when) */
+.vau-card .vc-dim { opacity: .35; pointer-events: none; filter: saturate(.4); }
+.vau-card [hidden] { display: none !important; }
+/* the presets menu at the head of the card */
+.vau-card .vc-presets .vc-menu { font-style: italic; }

@@ -13,9 +13,9 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vector-lab-tools.github.io/vector-abliteration-units/units.html">
   <script>(function(){try{var t=localStorage.getItem('vau-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-  <link rel="stylesheet" href="style.css?v=066dda346c">
+  <link rel="stylesheet" href="style.css?v=7b291d423e">
   <link rel="stylesheet" href="vau-explain.css?v=1e12dbfad5">
-  <link rel="stylesheet" href="vau-card.css?v=2a46375ad8">
+  <link rel="stylesheet" href="vau-card.css?v=61e26189cd">
   <link rel="stylesheet" href="vau-core.css?v=1304caed5c">
 </head>
 <body>
@@ -47,7 +47,7 @@
 
   <section class="hero doc-hero">
     <div class="wrap hero-inner">
-      <span class="kicker">The Core Collection · 16 units in VAU 0.2.10</span>
+      <span class="kicker">The Core Collection · 16 units in VAU 0.3.0</span>
       <h1>The Core Collection</h1>
       <p class="tagline">The units the package ships, sixteen of them: effects that act on the stream, fitted units, a neuron editor and meters. Each is one file in <code>src/vau/units/</code>, and each figure animates the change its code makes.</p>
     </div>
@@ -125,6 +125,9 @@
         target = torch.where(n &gt; threshold, threshold + (n - threshold) / ratio, n)
         return (x * (target / n) * makeup).to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Glue</td><td><code>compressor layer=6 ratio=4 makeup=1 thresh=1</code></td><td>The default: positions larger than usual pulled back at 4:1: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Squeeze</td><td><code>compressor layer=6 ratio=8 makeup=1 thresh=0.8</code></td><td>8:1 from a little below the usual size: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Flatten</td><td><code>compressor layer=6 ratio=4 makeup=1 thresh=0.3</code></td><td>4:1 from a third of the usual size: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Half Power</td><td><code>compressor layer=6 ratio=4 makeup=0.5 thresh=1</code></td><td>The default, then halved: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Crush Wall</td><td><code>compressor layer=6 ratio=20 makeup=1 thresh=0.5</code></td><td>20:1 from half the usual size: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Top Lid</td><td><code>compressor layer=10 ratio=20 makeup=1 thresh=1</code></td><td>20:1 at layer 10, on the largest positions only</td><td>none beyond chance</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="saturator">
@@ -168,6 +171,9 @@
         wet = level * torch.tanh(x / level)
         return ((1 - mix) * x + mix * wet).to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Gentle</td><td><code>saturator layer=6 mix=1 drive=0.5</code></td><td>Half the default drive: louder</td><td>level</td></tr><tr><td>Warm</td><td><code>saturator layer=6 mix=1 drive=1</code></td><td>The default: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Half Melt</td><td><code>saturator layer=6 mix=0.5 drive=4</code></td><td>Drive 4, half of it mixed in: darker, louder, spectral shape changed</td><td>brightness, level, spectral shape</td></tr><tr><td>Burn</td><td><code>saturator layer=6 mix=1 drive=4</code></td><td>Drive 4: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Meltdown</td><td><code>saturator layer=6 mix=1 drive=8</code></td><td>Drive 8: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Glass Fuzz</td><td><code>saturator layer=12 mix=1 drive=4</code></td><td>Drive 4 at the last layer: louder, spectral shape changed</td><td>level, spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="delay">
@@ -198,24 +204,30 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">Adds the stream from <i>time</i> positions back (tokens, in a language model); with feedback the echo carries its own earlier echoes, fading. The first position, an attention sink in many models, is neither changed nor drawn on. Mix 0 is neutral.</p>
+        <p class="help">Adds the stream from <i>time</i> positions back (tokens, in a language model); with feedback the echo carries its own earlier echoes, fading. Where the model has an attention sink at the first position (most language models), that position is neither changed nor drawn on. Mix 0 is neutral.</p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">delay layer=6 time=4 feedback=0.3 mix=0.5</span><span>code(u)</span></div><pre><code>delay_edit(time=4, feedback=0.3, mix=0.5, line={})</code></pre></div>
-<div class="term"><div class="label"><span class="raw">delay.py</span><span>The function it uses</span></div><pre><code>def delay_edit(time: int, feedback: float, mix: float, line: Dict[int, torch.Tensor]):
+<div class="term"><div class="label"><span class="raw">delay.py</span><span>The function it uses</span></div><pre><code>def delay_edit(time: int, feedback: float, mix: float, line: Dict[int, torch.Tensor], first: int = 1):
     &quot;&quot;&quot;Adds `mix` times the delay line `time` tokens back. The line at a position is the stream
-    there plus `feedback` times the line `time` tokens before it, so echoes repeat and fade.&quot;&quot;&quot;
+    there plus `feedback` times the line `time` tokens before it, so echoes repeat and fade.
+    `first` is the first position bent: 1 where position 0 is an attention sink, else 0. The line
+    keeps only the last `time` positions, all it ever reads again.&quot;&quot;&quot;
     def edit(h, pos):
         x = h.float()
         out = x.clone()
         for j, p in enumerate(pos.tolist()):
-            src = line.get(p - time) if p - time &gt;= 1 else None
-            if p &gt;= 1:
+            src = line.get(p - time) if p - time &gt;= first else None
+            if p &gt;= first:
                 line[p] = (x[0, j] + feedback * src) if src is not None else x[0, j].clone()
             if src is not None:
                 out[0, j] = x[0, j] + mix * src
+            line.pop(p - time, None)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">7 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Ghost Trail</td><td><code>delay layer=6 time=4 feedback=0.3 mix=0.2 keepnorm=1</code></td><td>An echo four frames (160 ms) back, at layer 6, with the stream kept to its size</td><td>none beyond chance</td></tr><tr><td>Slapback</td><td><code>delay layer=6 time=2 feedback=0.3 mix=0.2 keepnorm=1</code></td><td>A short echo, two frames (80 ms) back, kept to size: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Long Echo</td><td><code>delay layer=6 time=12 feedback=0.3 mix=0.2 keepnorm=1</code></td><td>An echo twelve frames (480 ms) back, kept to size: quieter</td><td>level</td></tr><tr><td>Deep Echo</td><td><code>delay layer=12 time=4 feedback=0.3 mix=0.2 keepnorm=1</code></td><td>An echo four frames back at the last layer, kept to size</td><td>none beyond chance</td></tr><tr><td>Smear</td><td><code>delay layer=2 time=4 feedback=0.3 mix=0.3 keepnorm=1</code></td><td>An early echo, at layer 2, with the stream kept to its size: each frame more like the ones before it</td><td>frame to frame</td></tr><tr><td>Feedback Loop <span class="chip">start</span></td><td><code>delay layer=6 time=8 feedback=0.7 mix=0.8 keepnorm=1</code></td><td>A strong echo that feeds back on itself, kept to size: darker, quieter, spectral shape changed</td><td>brightness, level, spectral shape</td></tr><tr><td>Late Repeats</td><td><code>delay layer=12 time=2 feedback=0.6 mix=0.6 keepnorm=1</code></td><td>Short repeats with feedback at the last layer, kept to size: darker</td><td>brightness</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="reverb">
@@ -246,24 +258,30 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">Adds a running average of the earlier positions, each step keeping <i>decay</i> of the last average. The first position is neither changed nor drawn on. Mix 0 is neutral.</p>
+        <p class="help">Adds a running average of the earlier positions, each step keeping <i>decay</i> of the last average. Where the model has an attention sink at the first position, that position is neither changed nor drawn on. Mix 0 is neutral.</p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">reverb layer=6 decay=0.8 mix=0.5</span><span>code(u)</span></div><pre><code>reverb_edit(decay=0.8, mix=0.5, tail={})</code></pre></div>
-<div class="term"><div class="label"><span class="raw">reverb.py</span><span>The function it uses</span></div><pre><code>def reverb_edit(decay: float, mix: float, tail: Dict[int, torch.Tensor]):
+<div class="term"><div class="label"><span class="raw">reverb.py</span><span>The function it uses</span></div><pre><code>def reverb_edit(decay: float, mix: float, tail: Dict[int, torch.Tensor], first: int = 1):
     &quot;&quot;&quot;Adds `mix` times a decaying average of the earlier positions (the tail): the tail at a
-    position is `decay` times the tail before it plus (1 - decay) times the stream there.&quot;&quot;&quot;
+    position is `decay` times the tail before it plus (1 - decay) times the stream there.
+    `first` is the first position bent (1 where position 0 is an attention sink, else 0); only
+    the last position&#x27;s tail is kept.&quot;&quot;&quot;
     def edit(h, pos):
         x = h.float()
         out = x.clone()
         for j, p in enumerate(pos.tolist()):
-            prev = tail.get(p - 1) if p &gt;= 2 else None
-            if p &gt;= 1:
+            prev = tail.get(p - 1) if p - 1 &gt;= first else None
+            if p &gt;= first:
                 tail[p] = (decay * prev + (1 - decay) * x[0, j]) if prev is not None else x[0, j].clone()
             if prev is not None:
                 out[0, j] = x[0, j] + mix * prev
+            tail.pop(p - 1, None)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">7 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Afterglow</td><td><code>reverb layer=6 decay=0.8 mix=0.2 keepnorm=1</code></td><td>A short tail of the stream&#x27;s own past at layer 6, kept to size</td><td>none beyond chance</td></tr><tr><td>Wash</td><td><code>reverb layer=12 decay=0.9 mix=0.3 keepnorm=1</code></td><td>A longer tail at the last layer, kept to size: darker</td><td>brightness</td></tr><tr><td>Short Room</td><td><code>reverb layer=10 decay=0.6 mix=0.5 keepnorm=1</code></td><td>A short tail mixed in strongly at layer 10, kept to size: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Undertow</td><td><code>reverb layer=2 decay=0.9 mix=0.3 keepnorm=1</code></td><td>An early tail, at layer 2, kept to size: quieter</td><td>level</td></tr><tr><td>Long Tail <span class="chip">start</span></td><td><code>reverb layer=6 decay=0.99 mix=0.8 keepnorm=1</code></td><td>A tail of about a hundred frames (four seconds), kept to size: darker, each frame less like the one before it, spectral shape changed</td><td>brightness, spectral shape, frame to frame</td></tr><tr><td>Infinite Hall</td><td><code>reverb layer=6 decay=0.999 mix=1 keepnorm=1</code></td><td>A tail that hardly fades, all of it mixed in, kept to size: darker, spectral shape changed</td><td>brightness, spectral shape</td></tr><tr><td>Late Bloom</td><td><code>reverb layer=12 decay=0.98 mix=0.8 keepnorm=1</code></td><td>A long tail at the last layer, kept to size: darker, each frame less like the one before it, spectral shape changed</td><td>brightness, spectral shape, frame to frame</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="erosion">
@@ -294,14 +312,16 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as rounding a model's weights to fewer bits degrades the weights. The first position is left as it is. Bits 16 and hold 1 are neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as rounding a model's weights to fewer bits degrades the weights. Where the model has an attention sink at the first position, that position is left as it is. Bits 16 and hold 1 are neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">erosion layer=6 bits=4</span><span>code(u)</span></div><pre><code>erosion_edit(step=6 * spread[layer] / 2**4, hold=1, held={})
 <span class="c"># spread is each dimension&#x27;s standard deviation at that layer over the reference set, model unchanged</span></code></pre></div>
-<div class="term"><div class="label"><span class="raw">erosion.py</span><span>The function it uses</span></div><pre><code>def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.Tensor]):
+<div class="term"><div class="label"><span class="raw">erosion.py</span><span>The function it uses</span></div><pre><code>def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.Tensor], first: int = 1):
     &quot;&quot;&quot;Quantises each dimension to multiples of its own `step` (fewer bits, coarser steps), and
-    holds the stream of the first position of each run of `hold` positions over the rest.&quot;&quot;&quot;
+    holds the stream of the first position of each run of `hold` positions over the rest.
+    `first` is the first position bent: 1 where position 0 is an attention sink, else 0. Only the
+    run in hand is kept.&quot;&quot;&quot;
     def edit(h, pos):
         x = h.float()
         if step is not None:
@@ -309,17 +329,21 @@
         if hold &gt; 1:
             x = x.clone()
             for j, p in enumerate(pos.tolist()):
-                if p &lt; 1:
+                if p &lt; first:
                     continue
-                first = 1 + ((p - 1) // hold) * hold
-                if p == first:
-                    held[first] = x[0, j].clone()
-                elif first in held:
-                    x[0, j] = held[first]
-        if step is not None or hold &gt; 1:
+                start = first + ((p - first) // hold) * hold
+                if p == start:
+                    held.pop(start - hold, None)
+                    held[start] = x[0, j].clone()
+                elif start in held:
+                    x[0, j] = held[start]
+        if (step is not None or hold &gt; 1) and first:
             x = torch.where(pos.view(1, -1, 1) == 0, h.float(), x)   # the attention sink untouched
         return x.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">7 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Bitcrush <span class="chip">start</span></td><td><code>erosion layer=6 bits=1 hold=1</code></td><td>One bit: each coordinate rounded to a few steps: darker, spectral shape changed</td><td>brightness, spectral shape</td></tr><tr><td>Two-Bit</td><td><code>erosion layer=12 bits=2 hold=1</code></td><td>Two bits at the last layer</td><td>none beyond chance</td></tr><tr><td>Crumble</td><td><code>erosion layer=12 bits=1 hold=4</code></td><td>One bit at the last layer, each position held for four frames: darker, each frame more like the ones before it, spectral shape changed</td><td>brightness, spectral shape, frame to frame</td></tr><tr><td>Stepped</td><td><code>erosion layer=6 bits=4 hold=4</code></td><td>Four bits, held for four frames: each frame more like the ones before it</td><td>frame to frame</td></tr><tr><td>Freeze 8</td><td><code>erosion layer=6 bits=16 hold=8</code></td><td>No rounding to speak of; each position held for eight frames (320 ms): each frame more like the ones before it</td><td>frame to frame</td></tr><tr><td>Hard Freeze</td><td><code>erosion layer=6 bits=16 hold=16</code></td><td>Each position held for sixteen frames (640 ms): each frame more like the ones before it</td><td>frame to frame</td></tr><tr><td>Late Freeze</td><td><code>erosion layer=12 bits=16 hold=8</code></td><td>Held for eight frames, at the last layer: darker, each frame more like the ones before it</td><td>brightness, frame to frame</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="shifter">
@@ -363,6 +387,9 @@
         a, b = (x * e1).sum(-1, keepdim=True), (x * e2).sum(-1, keepdim=True)
         return (x + (a * c - b * s - a) * e1 + (a * s + b * c - b) * e2).to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Turn</td><td><code>shifter layer=6 dir=brightness dir2=pulse angle=45</code></td><td>The default: 45 degrees in the plane of the two directions: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Quarter Turn</td><td><code>shifter layer=6 dir=brightness dir2=pulse angle=90</code></td><td>90 degrees: the first direction becomes the second: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Three-Eighths</td><td><code>shifter layer=6 dir=brightness dir2=pulse angle=135</code></td><td>135 degrees: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Flip</td><td><code>shifter layer=6 dir=brightness dir2=pulse angle=180</code></td><td>180 degrees: both directions reversed: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Counter Turn</td><td><code>shifter layer=6 dir=brightness dir2=pulse angle=-45</code></td><td>45 degrees the other way: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Early Turn</td><td><code>shifter layer=2 dir=brightness dir2=pulse angle=45</code></td><td>45 degrees at layer 2: spectral shape changed</td><td>spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="eq">
@@ -409,6 +436,9 @@
                 x = x + (g - 1.0) * ((xc @ v.T) @ v)
         return x.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Tilt Dark</td><td><code>eq layer=8 low=1.3 mid=1 high=0.7</code></td><td>The default: the main directions up, the minor ones down: darker, louder, spectral shape changed</td><td>brightness, level, spectral shape</td></tr><tr><td>Sky</td><td><code>eq layer=12 low=1 mid=1 high=1.25</code></td><td>The minor directions up by a quarter at the last layer: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Core Cut</td><td><code>eq layer=8 low=0 mid=1 high=1</code></td><td>The eight main directions taken out: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Mid Push</td><td><code>eq layer=8 low=1 mid=2 high=1</code></td><td>The middle directions doubled: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Mid Hole</td><td><code>eq layer=8 low=1 mid=0 high=1</code></td><td>The middle directions taken out: darker</td><td>brightness</td></tr><tr><td>Half Body</td><td><code>eq layer=8 low=0.5 mid=0.5 high=0.5</code></td><td>Every band halved: spectral shape changed</td><td>spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="beatrepeat">
@@ -439,26 +469,31 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">The positions after the first are taken in runs of <i>interval</i>; over the last <i>length</i> positions of each run, the stream is replaced (by <i>mix</i>) with the stream of the <i>length</i> positions just before them, so that stretch is heard twice. The first position, an attention sink, is neither changed nor replayed. Mix 0 is neutral.</p>
+        <p class="help">The positions after the first are taken in runs of <i>interval</i>; over the last <i>length</i> positions of each run, the stream is replaced (by <i>mix</i>) with the stream of the <i>length</i> positions just before them, so that stretch is heard twice. Where the model has an attention sink at the first position (most language models), that position is neither changed nor replayed. Mix 0 is neutral.</p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">beatrepeat layer=6 interval=8 length=2 mix=1</span><span>code(u)</span></div><pre><code>beatrepeat_edit(interval=8, length=2, mix=1, kept={})</code></pre></div>
-<div class="term"><div class="label"><span class="raw">beatrepeat.py</span><span>The function it uses</span></div><pre><code>def beatrepeat_edit(interval: int, length: int, mix: float, kept: Dict[int, torch.Tensor]):
-    &quot;&quot;&quot;Over the last `length` positions of each run of `interval` (from position 1), the stream is
-    moved toward the stream `length` positions back, as it was before this edit.&quot;&quot;&quot;
+<div class="term"><div class="label"><span class="raw">beatrepeat.py</span><span>The function it uses</span></div><pre><code>def beatrepeat_edit(interval: int, length: int, mix: float, kept: Dict[int, torch.Tensor], first: int = 1):
+    &quot;&quot;&quot;Over the last `length` positions of each run of `interval` (from position `first`: 1 where
+    position 0 is an attention sink, else 0), the stream is moved toward the stream `length`
+    positions back, as it was before this edit. Only the last `length` positions are kept.&quot;&quot;&quot;
     length = min(length, interval - 1)
 
     def edit(h, pos):
         x = h.float()
         out = x.clone()
         for j, p in enumerate(pos.tolist()):
-            if p &lt; 1:
+            if p &lt; first:
                 continue
             kept[p] = x[0, j].clone()
-            if (p - 1) % interval &gt;= interval - length and (p - length) in kept and p - length &gt;= 1:
+            if (p - first) % interval &gt;= interval - length and (p - length) in kept and p - length &gt;= first:
                 out[0, j] = (1 - mix) * x[0, j] + mix * kept[p - length]
+            kept.pop(p - length, None)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Stutter</td><td><code>beatrepeat layer=6 interval=8 length=2 mix=1</code></td><td>The default: the last two frames of every eight replay the frame before them</td><td>none beyond chance</td></tr><tr><td>Double Time</td><td><code>beatrepeat layer=6 interval=4 length=2 mix=1</code></td><td>Half of every four frames held</td><td>none beyond chance</td></tr><tr><td>Half Bar</td><td><code>beatrepeat layer=6 interval=8 length=4 mix=1</code></td><td>Half of every eight frames held: darker, each frame more like the ones before it</td><td>brightness, frame to frame</td></tr><tr><td>Tape Catch</td><td><code>beatrepeat layer=6 interval=3 length=1 mix=1</code></td><td>One frame in three held, a fast catch</td><td>none beyond chance</td></tr><tr><td>Deep Stutter</td><td><code>beatrepeat layer=2 interval=8 length=4 mix=1</code></td><td>Half of every eight frames held, at layer 2: each frame more like the ones before it</td><td>frame to frame</td></tr><tr><td>Long Loop</td><td><code>beatrepeat layer=12 interval=16 length=8 mix=1</code></td><td>Eight frames of every sixteen held at the last layer</td><td>none beyond chance</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="gate">
@@ -489,13 +524,14 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">At each position, only the <i>keep</i> share of the stream's components that are largest in size pass; the rest are set to zero. It shows how much of the stream the layers after it need. The first position, an attention sink, is left alone unless <i>sink too</i> is on. Keep 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">At each position, only the <i>keep</i> share of the stream's components that are largest in size pass; the rest are set to zero. It shows how much of the stream the layers after it need. The first position, where the model has an attention sink there, is left alone unless <i>sink too</i> is on (on a model with none, such as a music model, it is gated like any other). Keep 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">gate layer=6 keep=0.25</span><span>code(u)</span></div><pre><code>gate_edit(keep=0.25, sink=False)</code></pre></div>
-<div class="term"><div class="label"><span class="raw">gate.py</span><span>The function it uses</span></div><pre><code>def gate_edit(keep: float, sink: bool):
+<div class="term"><div class="label"><span class="raw">gate.py</span><span>The function it uses</span></div><pre><code>def gate_edit(keep: float, sink: bool, has_sink: bool = True):
     &quot;&quot;&quot;Each position&#x27;s components outside the largest `keep` share (by size) set to zero; the
-    first position left alone unless `sink`.&quot;&quot;&quot;
+    first position left alone unless `sink`, or unless the model has no attention sink there
+    (`has_sink` False).&quot;&quot;&quot;
     def edit(h, pos):
         if keep &gt;= 1.0:
             return h
@@ -503,10 +539,13 @@
         k = max(1, math.ceil(keep * x.shape[-1]))
         idx = x.abs().topk(k, dim=-1).indices
         out = torch.zeros_like(x).scatter(-1, idx, x.gather(-1, idx))
-        if not sink:
+        if not sink and has_sink:
             out = torch.where(pos.view(1, -1, 1) == 0, x, out)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Thin</td><td><code>gate layer=6 sink=0 keep=0.1</code></td><td>Keeps the largest tenth of the coordinates: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Skeleton</td><td><code>gate layer=6 sink=0 keep=0.02</code></td><td>Keeps the largest 2%: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Hollow</td><td><code>gate layer=10 sink=0 keep=0.05</code></td><td>Keeps the largest 5% at layer 10: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Bones</td><td><code>gate layer=11 sink=0 keep=0.05</code></td><td>Keeps the largest 5% at layer 11: brighter, spectral shape changed</td><td>brightness, spectral shape</td></tr><tr><td>Sparse Glass</td><td><code>gate layer=12 sink=0 keep=0.1</code></td><td>Keeps the largest tenth at the last layer: brighter, spectral shape changed</td><td>brightness, spectral shape</td></tr><tr><td>Needlepoint</td><td><code>gate layer=12 sink=0 keep=0.03</code></td><td>Keeps the largest 3% at the last layer: brighter, louder, spectral shape changed</td><td>brightness, level, spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="limiter">
@@ -537,11 +576,11 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">At each position, the sizes of the stream's components are ranked and the <i>ceiling</i> quantile of them taken as the limit; every component larger than that is clamped to it, sign kept. With ceiling 0.99 the largest 1% of a position's components are held down: in many models a few dimensions carry very large values ("massive activations"), and these are what a limiter catches. Heretic and OBLITERATUS clamp in the same way (winsorization) when they build directions, so that those dimensions do not dominate. The first position, where many models put an attention sink with the largest values of all, is left alone unless <i>sink too</i> is on. Ceiling 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">At each position, the sizes of the stream's components are ranked and the <i>ceiling</i> quantile of them taken as the limit; every component larger than that is clamped to it, sign kept. With ceiling 0.99 the largest 1% of a position's components are held down: in many models a few dimensions carry very large values ("massive activations"), and these are what a limiter catches. Heretic and OBLITERATUS clamp in the same way (winsorization) when they build directions, so that those dimensions do not dominate. The first position, where many models put an attention sink with the largest values of all, is left alone unless <i>sink too</i> is on (on a model with no sink there, it is clamped like any other). Ceiling 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">limiter layer=6 ceiling=0.99</span><span>code(u)</span></div><pre><code>limiter_edit(q=0.99, sink=False)</code></pre></div>
-<div class="term"><div class="label"><span class="raw">limiter.py</span><span>The function it uses</span></div><pre><code>def limiter_edit(q: float, sink: bool):
+<div class="term"><div class="label"><span class="raw">limiter.py</span><span>The function it uses</span></div><pre><code>def limiter_edit(q: float, sink: bool, has_sink: bool = True):
     &quot;&quot;&quot;Each position&#x27;s components clamped to ± the q-quantile of their absolute values; the first
     position (the attention sink) left alone unless `sink`.&quot;&quot;&quot;
     def edit(h, pos):
@@ -550,10 +589,13 @@
         x = h.float()
         lim = torch.quantile(x.abs(), q, dim=-1, keepdim=True)
         out = torch.maximum(torch.minimum(x, lim), -lim)
-        if not sink:
+        if not sink and has_sink:
             out = torch.where(pos.view(1, -1, 1) == 0, x, out)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Tame</td><td><code>limiter layer=10 sink=0 ceiling=0.995</code></td><td>Clamps the few largest coordinates a little, at layer 10</td><td>none beyond chance</td></tr><tr><td>Lid <span class="chip">start</span></td><td><code>limiter layer=10 sink=0 ceiling=0.99</code></td><td>The usual ceiling at layer 10: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Clamp Down</td><td><code>limiter layer=12 sink=0 ceiling=0.98</code></td><td>A lower ceiling at the last layer: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Brickwall</td><td><code>limiter layer=12 sink=0 ceiling=0.95</code></td><td>Lower still, at the last layer: louder</td><td>level</td></tr><tr><td>Flat Top</td><td><code>limiter layer=12 sink=0 ceiling=0.9</code></td><td>A ceiling at 0.9, at the last layer: louder</td><td>level</td></tr><tr><td>Tail Clamp</td><td><code>limiter layer=12 sink=0 ceiling=0.99</code></td><td>The default ceiling at the last layer: louder</td><td>level</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="multiband">
@@ -605,6 +647,9 @@
             out = out + ((y * (target / n - 1)) @ v)
         return out.to(h.dtype)
     return edit</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Low Squeeze <span class="chip">start</span></td><td><code>multiband layer=6 ratio=20 band=low thresh=0.5</code></td><td>The eight main directions compressed hard: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Early Low</td><td><code>multiband layer=2 ratio=20 band=low thresh=0.5</code></td><td>The same at layer 2: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Soft Low</td><td><code>multiband layer=10 ratio=8 band=low thresh=0.5</code></td><td>The main directions at 8:1, layer 10</td><td>none beyond chance</td></tr><tr><td>Floor Lift</td><td><code>multiband layer=10 ratio=20 band=low thresh=0.3</code></td><td>The main directions hard from a third of their size, layer 10: quieter, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Top Squeeze</td><td><code>multiband layer=6 ratio=20 band=high thresh=0.5</code></td><td>The minor directions compressed hard</td><td>none beyond chance</td></tr><tr><td>All Bands Hard</td><td><code>multiband layer=6 ratio=8 band=all thresh=0.3</code></td><td>Every band at 8:1 from a third of its size: spectral shape changed</td><td>spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="morph">
@@ -711,6 +756,7 @@ def knn_distance(a: torch.Tensor, b: torch.Tensor, k: int) -&gt; torch.Tensor:
     &quot;&quot;&quot;For each row of a, the mean Euclidean distance to its k nearest rows of b.&quot;&quot;&quot;
     d = torch.cdist(a, b)
     return d.topk(min(k, b.shape[0]), dim=1, largest=False).values.mean(1)</code></pre></div>
+        
         </details>
       </article>
       <article class="unit reveal" id="abliterate">
@@ -800,6 +846,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
         m = mean.float() / mean.float().norm().clamp_min(1e-9)
         v = v - (v @ m) * m
     return v / v.norm().clamp_min(1e-9)</code></pre></div>
+        
         </details>
       </article>
       <article class="unit reveal" id="neuron">
@@ -856,6 +903,9 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
         x[..., idx] = a
         return (x,) + tuple(args[1:])
     return hook</code></pre></div>
+        <h3>Presets on Magenta RT 2 small</h3>
+<p class="small">6 presets measured on Magenta RT 2 small, a music model, each kept only if it broke the output on none of 10 held-out seeds; the last column says which measures moved the same way beyond chance there. Presets are per model: on another model the same line can do something else.</p>
+<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody><tr><td>Bright Push</td><td><code>neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136 op=add value=3</code></td><td>Adds 3 to the 32 neurons of block 11 that write most along Brightness</td><td>none beyond chance</td></tr><tr><td>Bright Cells</td><td><code>neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136,3899,2872,1255,3496,1351,934,2014,3981,1231,1353,939,3078,3108,2450,441,4073,2056,8,617,658,1604,1081,1278,179,3583,3774,339,1465,1401,3450,2798,1926 op=scale value=20</code></td><td>The 64 neurons of block 11 that write most along Brightness, ×20</td><td>none beyond chance</td></tr><tr><td>Dark Cells</td><td><code>neuron block=11 n=293,3870,3444,245,1954,2828,381,26,2619,2993,211,2885,3340,197,2481,1013,3592,1244,1635,3080,83,3056,309,4013,1562,1928,587,2817,1019,3864,2728,2812,1423,1729,271,1994,429,267,562,1216,638,652,119,674,1425,3837,999,1696,1020,3322,3691,1575,282,2484,971,3016,539,315,2278,4055,3095,3660,514,553 op=scale value=20</code></td><td>The 64 that write most against Brightness, ×20: spectral shape changed</td><td>spectral shape</td></tr><tr><td>Pulse Cells</td><td><code>neuron block=11 n=1282,1216,154,670,1842,931,1160,516,438,2413,1930,3401,737,1793,4065,2370,3407,2651,1266,517,2543,1261,1546,1278,2538,1827,3059,92,3681,3256,2552,378,1399,1463,2145,166,2933,962,3485,640,1688,3159,1653,2129,712,2455,2695,293,1881,2418,3265,582,3163,2710,2367,322,3697,928,4006,2043,223,976,2348,83 op=scale value=20</code></td><td>The 64 that write most along Pulse, ×20: louder, spectral shape changed</td><td>level, spectral shape</td></tr><tr><td>Silence Cells</td><td><code>neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136,3899,2872,1255,3496,1351,934,2014,3981,1231,1353,939,3078,3108,2450,441,4073,2056,8,617,658,1604,1081,1278,179,3583,3774,339,1465,1401,3450,2798,1926 op=zero</code></td><td>The 64 Brightness neurons of block 11 switched off</td><td>none beyond chance</td></tr><tr><td>Ten Set <span class="chip">start</span></td><td><code>neuron block=10 n=2993,861,501,456,2633,2755,3898,1381,917,3303,2286,2724,2471,581,997,527,107,245,3561,3507,1903,232,1380,1572,618,1857,161,913,3409,1121,1166,1485 op=set value=8</code></td><td>The 32 Brightness neurons of block 10 held at 8: spectral shape changed</td><td>spectral shape</td></tr></tbody></table></div>
         </details>
       </article>
       <article class="unit reveal" id="entropy">
@@ -894,6 +944,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
 <div class="term"><div class="label"><span class="raw">entropy.py</span><span>The function it uses</span></div><pre><code>def entropy_bits(logprobs):
     &quot;&quot;&quot;The entropy of each row of log probabilities, in bits.&quot;&quot;&quot;
     return (-(logprobs.exp() * logprobs).sum(-1) / math.log(2)).tolist()</code></pre></div>
+        
         </details>
       </article>
       <article class="unit reveal" id="peakshare">
@@ -933,19 +984,20 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
     &quot;&quot;&quot;Each row&#x27;s share of its squared size in its k largest components, in percent.&quot;&quot;&quot;
     sq = stream.float() ** 2
     return (100 * sq.topk(min(k, sq.shape[-1]), dim=-1).values.sum(-1) / sq.sum(-1).clamp_min(1e-12)).tolist()</code></pre></div>
+        
         </details>
       </article>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="wrap"><p>Vector Abliteration Units 0.2.10 (VAU 1) · David M. Berry · GPL-3.0-or-later · part of the <a href="https://github.com/vector-lab-tools">Vector Lab</a> · this page built 17 November 2026</p></div>
+    <div class="wrap"><p>Vector Abliteration Units 0.3.0 (VAU 1) · David M. Berry · GPL-3.0-or-later · part of the <a href="https://github.com/vector-lab-tools">Vector Lab</a> · this page built 24 November 2026</p></div>
   </footer>
 
   <script src="site.js?v=a3da86c6b0"></script>
   <script src="vau-explain.js?v=4bc333aae2"></script>
-  <script src="vau-catalogue.js?v=15447b7a88"></script>
-  <script src="vau-card.js?v=feead43bdd"></script>
+  <script src="vau-catalogue.js?v=94f9034e96"></script>
+  <script src="vau-card.js?v=088c6ddfd2"></script>
   <script src="vau-cards.js?v=e6703ded18"></script>
 </body>
 </html>

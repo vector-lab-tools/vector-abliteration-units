@@ -35,14 +35,14 @@ import torch
 HOST_PARAMS: List[Dict[str, Any]] = [
     {"key": "wet", "label": "Wet", "tip": "h' = h + wet · (edit(h) − h)", "kind": "knob", "min": 0, "max": 1, "default": 1, "step": 0.01, "neutral": 0},
     {"key": "env", "label": "Envelope", "tip": "wet × e(l): none, linear, bell or flat over the depth", "kind": "choice", "choices": ["none", "linear", "bell", "flat"], "default": "none"},
-    {"key": "epeak", "label": "Peak", "tip": "e(l) is largest at l = epeak × depth", "kind": "knob", "min": 0, "max": 1, "default": 0.5, "step": 0.01},
-    {"key": "ewidth", "label": "Width", "tip": "e(l) = 0 beyond ewidth × depth from the peak", "kind": "knob", "min": 0.05, "max": 1, "default": 0.5, "step": 0.01},
-    {"key": "eedge", "label": "Edge", "tip": "e at the edge of the reach = eedge", "kind": "knob", "min": 0, "max": 1, "default": 0, "step": 0.01},
+    {"key": "epeak", "label": "Peak", "tip": "e(l) is largest at l = epeak × depth", "kind": "knob", "min": 0, "max": 1, "default": 0.5, "step": 0.01, "when": {"env": ["linear", "bell", "flat"]}},
+    {"key": "ewidth", "label": "Width", "tip": "e(l) = 0 beyond ewidth × depth from the peak", "kind": "knob", "min": 0.05, "max": 1, "default": 0.5, "step": 0.01, "when": {"env": ["linear", "bell", "flat"]}},
+    {"key": "eedge", "label": "Edge", "tip": "e at the edge of the reach = eedge", "kind": "knob", "min": 0, "max": 1, "default": 0, "step": 0.01, "when": {"env": ["linear", "bell", "flat"]}},
     {"key": "keepnorm", "label": "Keep size", "tip": "h' ← h' · ‖h‖ / ‖h'‖ at each position", "kind": "toggle", "default": 0},
     {"key": "wfrom", "label": "From step", "tip": "acts only at steps ≥ wfrom  (0: everywhere)", "kind": "int", "min": 0, "max": 4096, "default": 0},
     {"key": "wto", "label": "To step", "tip": "acts only at steps ≤ wto  (0: to the end)", "kind": "int", "min": 0, "max": 4096, "default": 0},
     {"key": "control", "label": "Control", "tip": "random: each direction → random, same ‖·‖ per layer", "kind": "choice", "choices": ["none", "random"], "default": "none"},
-    {"key": "cseed", "label": "Control seed", "tip": "the random control's seed", "kind": "int", "min": 0, "max": 9999, "default": 0},
+    {"key": "cseed", "label": "Control seed", "tip": "the random control's seed", "kind": "int", "min": 0, "max": 9999, "default": 0, "when": {"control": ["random"]}},
 ]
 RESERVED = tuple(p["key"] for p in HOST_PARAMS)
 

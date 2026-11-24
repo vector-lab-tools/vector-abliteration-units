@@ -52,6 +52,8 @@ Each entry in `params` has a `key` (lower case, and not one of the target names 
 | `direction` | The name of a direction the host keeps. |
 | `text` | Free text, with an optional `hint`. |
 
+`when` makes a parameter apply only in some settings: `{"shape": ["linear", "bell"]}` applies while the parameter `shape` has one of those values (Abliterate's peak, width and edge mean nothing while its shape is flat), and `{"host": ["sink"]}` applies only where the host says its model has that property (section 4). A host dims a parameter that does not apply for now, and leaves out one whose host flag its model lacks; the card runtime does both (section 5f). The host features use it too: the envelope's peak, width and edge apply while it is not `none`, the control seed while the control is `random`.
+
 `required: true` marks a parameter the line must give. `neutral` is the value at which the unit changes nothing, where it has one. A unit set to all its neutral values must leave the model's output exactly as it is without the unit, and hosts and the conformance checks test that.
 
 In a chain a line is written `id target=value key=value ...`, as in `delay layer=6 time=4 feedback=0.3 mix=0.5`. Values reach the unit as strings; `UnitContext` turns them into numbers with the manifest's defaults.
@@ -76,6 +78,10 @@ Units name a **site**, a kind of place in a model, not a particular model:
 A unit needs its site, `ordered` if its axis is ordered, `directions` if it has a direction parameter, and whatever it lists in `requires`. A host says what it offers in `Host.capabilities()`. A unit whose needs the host cannot meet is listed as unavailable, with what it lacks, and is not run.
 
 A host reaches a model through an **adapter**, which maps the sites onto one architecture. The package's adapter covers GPT-2, Pythia and Llama-style language models. A unit that keeps to its site and its `UnitContext` runs unchanged under a later adapter (for a diffusion model, or an audio model) that offers the same capabilities.
+
+### Position 0 and the attention sink
+
+Most language models keep an attention sink at the first position: a token every head can attend to, with very large values. Several units leave it alone (the Core Collection's Lookback, Running Average, Position Repeat and Quantise), and two offer to bend it anyway (Sparsify's and Component Clamp's *sink too*). Other models have no sink there: in an audio model the first position is just the first frame. A host says which with `Host.sink()` (true by default, as for a language model), and a unit reads it as `u.sink`: where it is false, the units bend the first position like any other, and *sink too* is left out (`when: {"host": ["sink"]}`).
 
 ### Site and space
 
@@ -179,7 +185,7 @@ A host that draws units as strips SHOULD let VAU draw each unit's card:
 
 A host may draw a card itself, from the same manifest and interface, but the standard discourages it: a unit should look and handle the same on every host. A host may also give a unit a display title of its own, where the canonical one would mislead in its setting (an audio host calling vPosition Repeat "Frame Repeat", since its positions are 40 ms frames of sound). The unit's `id`, its parameter keys and its canonical title do not change; the host shows the canonical title, with its collection's prefix, in the unit's help; and the prefix belongs to the canonical name, not to the host's. Units outside any collection get a plain card from the same runtime.
 
-A collection's look is an interface language of its own, kept apart from its units: a unit's manifest says what it does, its parameters and the readings it suggests, and nothing about how it looks. The interface is two files in `vau/look/`, a stylesheet (`core.css`) and the rest (`core.json`): which component draws each control (section 5f), and the units' `tint` (`#rrggbb`), one for the whole collection (`tint`) or, where a collection wants it, one per unit (`tints`, by id). The Core Collection's units share one, the faceplate's blue. The catalogue entry carries it as `tint` (`null` outside a collection). A host may let it into its own frame or top line (a glass top bar, say); the card keeps its collection's look. Another collection can bring a different interface for the same kinds of unit.
+A collection's look is an interface language of its own, kept apart from its units: a unit's manifest says what it does, its parameters and the readings it suggests, and nothing about how it looks. The interface is two files in `vau/look/`, a stylesheet (`core.css`) and the rest (`core.json`): which component draws each control (section 5f), and the units' `tint` (`#rrggbb`), one for the whole collection (`tint`) or, where a collection wants it, one per unit (`tints`, by id). The Core Collection's units share one, the faceplate's blue. The catalogue entry carries it as `tint` (`null` outside a collection). A host may let it into its own frame or top line (a glass top bar, say); the card keeps its collection's look. Another collection can bring a different interface for the same kinds of unit. The interface may also group the collection's units by what they act on (`groups`: an id, a title, a sentence, and the units), for a host's menus and lists. The Core Collection's groups are: along time (Lookback, Running Average, Position Repeat), on the stream's size (Norm Shrink), coordinate by coordinate (Tanh Squash, Quantise, Sparsify, Component Clamp), along directions and principal bands (Principal Bands, Band Shrink, Rotate), inside a block (Abliterate, Morph, Neuron), and meters.
 
 A collection's stylesheet sets only `--vu-*` properties on its class and styles the mark; the components' shapes are the runtime's (`card.css`). The top line and the frame stay the host's.
 
@@ -266,7 +272,20 @@ A collection's interface file (`look/<collection>.json`) maps controls onto comp
 
 `defaults` maps a parameter's kind, or a control's role (`target`, `target-menu`, `host-knob`, `host-choice`, `host-toggle`), to a component; `units` maps a unit's own keys. `selector` picks `selector-small` or `selector-med` by the number of choices, and a menu past five, or where the settings' names would not fit around the lever (one longer than 8 characters, or more than 15 in all). A `direction` is always its own kind, a menu by default, since its choices are the host's directions. The Core Collection draws its main parameter as a large knob, so its cards have no faders.
 
-`VAUCard.mount(element, options)` takes the unit's catalogue entry, its collection's interface, `get(key)` and `set(key, value)` for the line, the host's directions, and the controls only the host can describe: the target (the model's layers and heads) and the host features, each as `{key, label, kind, role, min, max, choices, reset, get(), put(value)}`. A meter's screen is the host's, since it holds the run's readings; the host draws a one-number reading on it with `VAUCard.needle(original, diverged, unit)` (`meter-1`) where the look shows needles (`--vu-meter-needle`), and passes it as `screen`, which the card puts in its main place.
+`VAUCard.mount(element, options)` takes the unit's catalogue entry, its collection's interface, `get(key)` and `set(key, value)` for the line, the host's directions, and the controls only the host can describe: the target (the model's layers and heads) and the host features, each as `{key, label, kind, role, min, max, choices, reset, get(), put(value)}`. A meter's screen is the host's, since it holds the run's readings; the host draws a one-number reading on it with `VAUCard.needle(original, diverged, unit)` (`meter-1`) where the look shows needles (`--vu-meter-needle`), and passes it as `screen`, which the card puts in its main place. It also takes the host's flags (`flags`, such as `{"sink": false}` for a model with no attention sink), by which the card leaves out controls (section 3), and the unit's presets on the host's model (`presets`, `start`, from the catalogue; section 5g) with `onPreset(preset)`: the card lists them in a menu at its head, and hands the one chosen to the host, which writes its line. A control whose `when` does not hold is dimmed, and comes back as soon as the control it depends on is turned.
+
+## 5g. Presets, by model
+
+A setting that bends one model well can silence another: on a music model, Lookback at its default mix of 0.5 leaves the output almost silent, and several units do nothing audible at their defaults. So VAU keeps presets per model, not per unit: one file for each model they were measured on, in `vau/presets/`.
+
+A preset file gives:
+- `model`: the model's name, the ids a host may know it by, and its kind (text, music);
+- `measured`: who measured the presets, when, how, and what each figure means;
+- `units`: for each unit, its presets and `start`, the preset a host should begin the unit at on this model (or none, where the manifest's default does).
+
+A preset is a chain line with a name and a tip, and the figures it was kept on: `{"name": "Ghost Trail", "line": "delay layer=6 time=4 feedback=0.3 mix=0.2 keepnorm=1", "tip": "...", "held_out": {...}}`. Its line may set the target, the unit's parameters and the host features. A preset is kept only if it does what its tip says on inputs it was not chosen on: the first set, 75 presets for 12 units on Magenta RT 2 small, was searched on six seeds and kept only if it broke the sound on none of ten others, with the measures that moved beyond chance named (`heard`).
+
+`vau.presets_for(model)` finds a model's presets by any of its ids or its name. A host that passes its model to `Registry.catalogue(capabilities, model=...)` gets each unit's `presets` and `start` in its catalogue entry, and `presets` at the top says which model and how they were measured. Hosts may keep presets of their own and the user's beside these.
 
 ## 6. Where units come from
 

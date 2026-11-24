@@ -279,3 +279,4 @@ dialog.lightbox::backdrop { background: rgba(8, 9, 12, 0.82); }
 .lightbox .lb-close { position: absolute; top: -14px; right: -14px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.3);
   background: #1e2128; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; z-index: 1; }
 .lightbox .lb-close:hover { border-color: var(--accent); color: var(--accent); }
+.content p.small { font-size: 0.88rem; color: var(--ink-dim); max-width: 60em; }

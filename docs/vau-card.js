@@ -18,6 +18,10 @@
      directions  the names of the directions the host keeps, for a direction parameter
      screen      an element of the host's to put on the card, for a meter's readings
      tip(el, control, how)  optional: the host's own tooltip for a control
+     flags       what the host says of its model, e.g. {sink: false} where position 0 is no attention
+                 sink; a control whose when names a flag the model lacks is left out
+     presets, start, presetsFrom   the unit's presets on the host's model (catalogue), listed in a
+                 menu at the head of the card; onPreset(preset) hands the chosen one to the host
 
    A control the host describes: {key, label, kind: knob | int | choice | toggle | text, role,
    min, max, step, int, reset, choices, labels, tip, hint, all, get(), put(value), fmt(value)}.
@@ -236,9 +240,12 @@
 
   // ---------------------------------------------------------------- the card
   function draw(o, c) {
+    var put = c.put;                              // every change re-reads the controls that apply only when others have certain values
+    c.put = function (v) { put(v); if (o._refresh) o._refresh(); };
     var name = component(o.iface, o.unit.id, c);
     var node = /^knob/.test(name) ? knob(o, c, name) : /^selector/.test(name) ? selector(o, c, name) : name === "fader-1" ? fader(o, c)
       : name === "light-1" ? light(o, c) : name === "field-1" ? field(o, c) : menu(o, c);
+    if (o._all) o._all.push({ c: c, node: node });
     return { name: name, node: node };
   }
   // Lay controls out: small knobs three to a row, knobs two to a row, lights side by side, the
@@ -259,15 +266,52 @@
     var reset = p["default"] !== undefined ? p["default"] : p.kind === "choice" ? p.choices[0] : p.kind === "toggle" ? 0 : "";
     var choices = p.kind === "choice" ? p.choices.map(String) : p.kind === "direction" ? (o.directions && o.directions.length ? o.directions : ["(none yet)"]) : undefined;
     return { key: p.key, label: p.label, kind: p.kind === "direction" ? "choice" : p.kind === "fader" ? "fader" : p.kind, direction: p.kind === "direction", min: p.min, max: p.max, step: p.step,
-      int: p.kind === "int", reset: reset, choices: choices, tip: p.tip, hint: p.hint,
+      int: p.kind === "int", reset: reset, choices: choices, tip: p.tip, hint: p.hint, when: p.when,
       get: function () { var s = o.get(p.key); if (!isNum) return s === undefined ? reset : s; var v = parseFloat(s); return s === undefined || isNaN(v) ? reset : v; },
       put: function (v) { o.set(p.key, v, p.kind === "text"); } };
+  }
+  // when: {key: [values]} applies while the control `key` has one of those values (dimmed otherwise);
+  // {host: [flags]} applies only where the host says so of its model (hidden otherwise). Flags:
+  // sink (position 0 is an attention sink), true unless the host says otherwise.
+  function applies(o, c) {
+    var w = c.when || {}, flags = o.flags || {}, k, ok = true, shown = true;
+    for (k in w) {
+      if (k === "host") { w.host.forEach(function (f) { if (flags[f] === false || (flags[f] === undefined && f !== "sink")) shown = false; }); continue; }
+      var other = (o._all || []).filter(function (x) { return x.c.key === k && x.c !== c; })[0];
+      if (other && w[k].map(String).indexOf(String(other.c.get())) < 0) ok = false;
+    }
+    return { shown: shown, ok: ok };
+  }
+  function refresh(o) {
+    (o._all || []).forEach(function (x) {
+      if (!x.c.when) return;
+      var a = applies(o, x.c);
+      x.node.hidden = !a.shown;
+      x.node.classList.toggle("vc-dim", !a.ok);
+      x.node.setAttribute("aria-disabled", a.ok ? "false" : "true");
+    });
+  }
+  // presets: the ones measured on the host's model for this unit (catalogue: units[i].presets),
+  // listed in a menu at the head of the card; choosing one hands it to the host (onPreset), which
+  // writes its line, placement and host features as it does for any line
+  function presetMenu(o) {
+    var wrap = el("label", "vc-menu-w vc-presets"), s = el("select", "vc-menu");
+    s.setAttribute("aria-label", "Presets");
+    s.innerHTML = '<option value="" selected disabled>Presets…</option>' + o.presets.map(function (p, i) {
+      return '<option value="' + i + '" title="' + esc(p.tip || "") + '">' + esc(p.name) + (o.start === p.name ? " (start)" : "") + "</option>";
+    }).join("");
+    s.addEventListener("change", function () { var p = o.presets[+s.value]; s.value = ""; if (p && o.onPreset) o.onPreset(p); });
+    wrap.appendChild(s);
+    wrap.title = "Presets measured on this model" + (o.presetsFrom ? " (" + o.presetsFrom + ")" : "") + ": choosing one writes its line";
+    return wrap;
   }
   function mount(host, o) {
     host.innerHTML = "";
     host.classList.add("vau-card");
     if (o.unit.collection) host.classList.add("vau-" + o.unit.collection);
+    o._all = []; o._refresh = function () { refresh(o); };
     var body = el("div", "vc-body"), main = el("div", "vc-main");
+    if (o.presets && o.presets.length) body.appendChild(presetMenu(o));
     if (o.target && o.target.length) {
       var t = el("div", "vc-target");
       lay(t, o.target.map(function (c) { return draw(o, c); }), null);
@@ -286,6 +330,7 @@
     if (o.screen) main.appendChild(o.screen);
     if (main.children.length) host.appendChild(main);
     host.appendChild(el("span", "vau-mark", "VAU"));
+    refresh(o);
     return host;
   }
 

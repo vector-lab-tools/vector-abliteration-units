@@ -17,30 +17,33 @@ UNIT = {
     "example": "delay layer=6 time=4 feedback=0.3 mix=0.5",
     "summary": {"reads": "change", "label": "echo"},     # what a host's summary of the strip shows (SPEC 5e)
     "help": "Adds the stream from <i>time</i> positions back (tokens, in a language model); with feedback the "
-            "echo carries its own earlier echoes, fading. The first position, an attention sink in many "
-            "models, is neither changed nor drawn on. Mix 0 is neutral.",
+            "echo carries its own earlier echoes, fading. Where the model has an attention sink at the first "
+            "position (most language models), that position is neither changed nor drawn on. Mix 0 is neutral.",
     "version": "1.0", "author": "David M. Berry", "licence": "GPL-3.0-or-later",
 }
 
 
-def delay_edit(time: int, feedback: float, mix: float, line: Dict[int, torch.Tensor]):
+def delay_edit(time: int, feedback: float, mix: float, line: Dict[int, torch.Tensor], first: int = 1):
     """Adds `mix` times the delay line `time` tokens back. The line at a position is the stream
-    there plus `feedback` times the line `time` tokens before it, so echoes repeat and fade."""
+    there plus `feedback` times the line `time` tokens before it, so echoes repeat and fade.
+    `first` is the first position bent: 1 where position 0 is an attention sink, else 0. The line
+    keeps only the last `time` positions, all it ever reads again."""
     def edit(h, pos):
         x = h.float()
         out = x.clone()
         for j, p in enumerate(pos.tolist()):
-            src = line.get(p - time) if p - time >= 1 else None
-            if p >= 1:
+            src = line.get(p - time) if p - time >= first else None
+            if p >= first:
                 line[p] = (x[0, j] + feedback * src) if src is not None else x[0, j].clone()
             if src is not None:
                 out[0, j] = x[0, j] + mix * src
+            line.pop(p - time, None)
         return out.to(h.dtype)
     return edit
 
 
 def edit(u, layer):
-    return delay_edit(max(1, u.int("time")), min(0.95, max(0.0, u.num("feedback"))), u.num("mix"), u.memory(layer))
+    return delay_edit(max(1, u.int("time")), min(0.95, max(0.0, u.num("feedback"))), u.num("mix"), u.memory(layer), 1 if u.sink else 0)
 
 
 def code(u):

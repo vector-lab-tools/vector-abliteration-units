@@ -134,6 +134,12 @@ class UnitContext:
     def cache(self, kind: str, key: str):
         return self.host.cache(kind, key)
 
+    @property
+    def sink(self) -> bool:
+        """Whether position 0 is an attention sink on the host's model (Host.sink): units that
+        leave the sink alone bend position 0 like any other where it is not."""
+        return self.host.sink() if self.host is not None and hasattr(self.host, "sink") else True
+
     def memory(self, layer: int) -> Dict[Any, Any]:
         return self.host.memory(self.strip, layer)
 

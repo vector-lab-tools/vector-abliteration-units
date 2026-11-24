@@ -11,6 +11,7 @@ VAU_VERSION = 1
 CATEGORIES = ("intervention", "effect", "fitted", "meter", "sampler")
 LEVELS = ("model", "weights", "order", "sampler", "probe")
 SITES = ("stream", "output", "weights", "logits")
+HOST_FLAGS = ("sink",)               # what a host says of its model, which a control may depend on (when: {"host": [...]})
 SHORT_MAX = 14                       # a unit's short name, for a host's tight spaces (a strip's top bar)
 SPACES = ("stream", "hidden", "component", "weights", "logits", "conditioning")   # what a unit transforms (SPEC 2); site is where its hook goes
 SPACE_OF_SITE = {"stream": "stream", "output": "component", "weights": "weights", "logits": "logits"}
@@ -105,6 +106,22 @@ def check(m: Any, module=None) -> List[str]:
         disp = m.get("display")
         if not isinstance(disp, dict) or disp.get("kind") not in DISPLAYS:
             bad.append(f"a meter needs a display: {{'kind': one of {', '.join(DISPLAYS)}, 'label': ...}}")
+    pkeys = {q.get("key") for q in m.get("params", []) or []}
+    for q in m.get("params", []) or []:
+        w = q.get("when")
+        if w is None:
+            continue
+        if not isinstance(w, dict) or not w:
+            bad.append(f"parameter {q.get('key')!r}: when is a dict, {{key: [values]}} or {{'host': [flags]}}")
+            continue
+        for k, v in w.items():
+            if not isinstance(v, list) or not v:
+                bad.append(f"parameter {q.get('key')!r}: when[{k!r}] is a list of values")
+            elif k == "host":
+                if any(f not in HOST_FLAGS for f in v):
+                    bad.append(f"parameter {q.get('key')!r}: when['host'] names one of {', '.join(HOST_FLAGS)}")
+            elif k not in pkeys or k == q.get("key"):
+                bad.append(f"parameter {q.get('key')!r}: when names {k!r}, which is not another of its unit's parameters")
     if "short" in m and not (isinstance(m["short"], str) and 0 < len(m["short"]) <= SHORT_MAX):
         bad.append(f"short is a title of at most {SHORT_MAX} characters, for a host's tight spaces")
     elif "short" not in m and isinstance(m.get("title"), str) and len(m["title"]) > SHORT_MAX:

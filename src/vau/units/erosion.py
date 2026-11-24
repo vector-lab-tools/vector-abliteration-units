@@ -17,15 +17,17 @@ UNIT = {
     "summary": {"reads": "change", "label": "quantisation error"},     # what a host's summary of the strip shows (SPEC 5e)
     "help": "Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the "
             "stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as "
-            "rounding a model's weights to fewer bits degrades the weights. The first position is left as it is. Bits 16 and hold 1 are neutral."
+            "rounding a model's weights to fewer bits degrades the weights. Where the model has an attention sink at the first position, that position is left as it is. Bits 16 and hold 1 are neutral."
             "<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p>",
     "version": "1.0", "author": "David M. Berry", "licence": "GPL-3.0-or-later",
 }
 
 
-def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.Tensor]):
+def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.Tensor], first: int = 1):
     """Quantises each dimension to multiples of its own `step` (fewer bits, coarser steps), and
-    holds the stream of the first position of each run of `hold` positions over the rest."""
+    holds the stream of the first position of each run of `hold` positions over the rest.
+    `first` is the first position bent: 1 where position 0 is an attention sink, else 0. Only the
+    run in hand is kept."""
     def edit(h, pos):
         x = h.float()
         if step is not None:
@@ -33,14 +35,15 @@ def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.
         if hold > 1:
             x = x.clone()
             for j, p in enumerate(pos.tolist()):
-                if p < 1:
+                if p < first:
                     continue
-                first = 1 + ((p - 1) // hold) * hold
-                if p == first:
-                    held[first] = x[0, j].clone()
-                elif first in held:
-                    x[0, j] = held[first]
-        if step is not None or hold > 1:
+                start = first + ((p - first) // hold) * hold
+                if p == start:
+                    held.pop(start - hold, None)
+                    held[start] = x[0, j].clone()
+                elif start in held:
+                    x[0, j] = held[start]
+        if (step is not None or hold > 1) and first:
             x = torch.where(pos.view(1, -1, 1) == 0, h.float(), x)   # the attention sink untouched
         return x.to(h.dtype)
     return edit
@@ -49,7 +52,7 @@ def erosion_edit(step: Optional[torch.Tensor], hold: int, held: Dict[int, torch.
 def edit(u, layer):
     bits = u.int("bits")
     step = None if bits >= 16 else torch.tensor(u.stats()["std"][layer], device=u.device) * (6.0 / 2 ** max(1, bits))
-    return erosion_edit(step, max(1, u.int("hold")), u.memory(layer))
+    return erosion_edit(step, max(1, u.int("hold")), u.memory(layer), 1 if u.sink else 0)
 
 
 def code(u):

@@ -1,5 +1,5 @@
 {
-  "_": "The Core Collection's interface, beside core.css: which component draws each control (SPEC 5f), and the collection's tint, the faceplate's blue, which every unit in it shares. A unit's own key overrides its kind's default.",
+  "_": "The Core Collection's interface, beside core.css: which component draws each control (SPEC 5f), the collection's tint, and its units' groups by what they act on (SPEC 5d). A unit's own key overrides its kind's default.",
   "components": {
     "defaults": {
       "knob": "knob-1",
@@ -30,5 +30,65 @@
       }
     }
   },
-  "tint": "#2c4f9e"
+  "tint": "#2c4f9e",
+  "groups": [
+    {
+      "id": "time",
+      "title": "Along time",
+      "what": "Draw on earlier positions: each position's stream at their layer gets something of the positions before it (an echo, a decaying average, a replay).",
+      "units": [
+        "delay",
+        "reverb",
+        "beatrepeat"
+      ]
+    },
+    {
+      "id": "size",
+      "title": "On the stream's size",
+      "what": "Act on the length of the stream's vector and leave its direction alone, so they do not depend on the coordinates the stream is written in.",
+      "units": [
+        "compressor"
+      ]
+    },
+    {
+      "id": "element",
+      "title": "Coordinate by coordinate",
+      "what": "Act on each of the stream's coordinates separately (squash, round, zero or clamp them), so what they do depends on the coordinates the stream is written in.",
+      "units": [
+        "saturator",
+        "erosion",
+        "gate",
+        "limiter"
+      ]
+    },
+    {
+      "id": "subspace",
+      "title": "Along directions and principal bands",
+      "what": "Act along chosen directions of the stream, or bands of its principal directions measured on the unchanged model.",
+      "units": [
+        "eq",
+        "multiband",
+        "shifter"
+      ]
+    },
+    {
+      "id": "block",
+      "title": "Inside a block",
+      "what": "Act inside the blocks rather than between them: on what attention and the MLP write, or on the MLP's neurons.",
+      "units": [
+        "abliterate",
+        "morph",
+        "neuron"
+      ]
+    },
+    {
+      "id": "meters",
+      "title": "Meters",
+      "what": "Read the model and change nothing.",
+      "units": [
+        "entropy",
+        "peakshare"
+      ]
+    }
+  ]
 }

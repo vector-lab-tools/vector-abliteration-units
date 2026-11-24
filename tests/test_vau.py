@@ -2,6 +2,7 @@
 # conformance on a stand-in host (no model needed).
 # Run: python -m pytest -q
 # SPDX-License-Identifier: GPL-3.0-or-later
+import json
 import re
 
 import torch
@@ -423,3 +424,74 @@ def test_every_unit_has_a_full_and_a_short_name_and_a_long_title_needs_a_short_o
 def test_a_short_title_is_offered_and_checked():
     assert [REG.get(k).public()["short"] for k in ("compressor", "saturator", "reverb", "eq", "beatrepeat", "multiband", "limiter")] == ["Shrink", "Squash", "Average", "Bands", "Repeat", "Bandshrink", "Clamp"]
     assert any("short" in e for e in vau.check(dict(REG.get("limiter").m, short="A much too long short title")))
+
+
+def test_the_units_that_keep_earlier_positions_keep_only_the_window_they_read():
+    from vau.units.delay import delay_edit
+    from vau.units.reverb import reverb_edit
+    from vau.units.beatrepeat import beatrepeat_edit
+    from vau.units.erosion import erosion_edit
+    d = 8
+    for make, bound in ((lambda m: delay_edit(4, 0.3, 0.5, m), 4), (lambda m: reverb_edit(0.9, 0.5, m), 1),
+                        (lambda m: beatrepeat_edit(8, 2, 1.0, m), 2), (lambda m: erosion_edit(None, 4, m), 1)):
+        mem = {}
+        fn = make(mem)
+        fn(torch.randn(1, 5, d), torch.arange(5))                 # a prompt pass, then one position at a time
+        for p in range(5, 2000):
+            fn(torch.randn(1, 1, d), torch.tensor([p]))
+            assert len(mem) <= bound, (make, len(mem))
+
+
+def test_position_zero_is_left_alone_only_where_the_model_has_an_attention_sink():
+    from vau.units.delay import delay_edit
+    from vau.units.gate import gate_edit
+    h = torch.randn(1, 6, 8)
+    for first in (1, 0):
+        out = delay_edit(1, 0.0, 1.0, {}, first)(h, torch.arange(6))
+        assert torch.equal(out[0, 1], h[0, 1]) == (first == 1)    # position 1 echoes position 0 only without a sink
+    g = h.clone(); g[0, 0, 0] = 100.0
+    assert torch.equal(gate_edit(0.25, False, True)(g, torch.arange(6))[0, 0], g[0, 0])
+    assert not torch.equal(gate_edit(0.25, False, False)(g, torch.arange(6))[0, 0], g[0, 0])
+    assert StandInHost(sink=False).sink() is False and StandInHost().sink() is True
+
+
+def test_the_core_groups_place_every_unit_once():
+    groups = vau.collection.interface("core")["groups"]
+    ids = [u for g in groups for u in g["units"]]
+    assert sorted(ids) == sorted(u.id for u in REG) and len(ids) == len(set(ids))
+
+
+def test_a_when_names_another_parameter_or_a_host_flag():
+    a = REG.get("abliterate").m
+    assert all(p["when"] == {"shape": ["linear", "bell"]} for p in a["params"] if p["key"] in ("peak", "width", "edge"))
+    assert [p["when"] for p in REG.get("gate").m["params"] if p["key"] == "sink"] == [{"host": ["sink"]}]
+    m = dict(a, params=[dict(p, when={"nothing": ["x"]}) if p["key"] == "peak" else p for p in a["params"]])
+    assert any("when" in e for e in vau.check(m))
+
+
+def test_every_preset_is_a_valid_line_for_its_unit_and_its_start_is_one_of_them():
+    from vau.hostfx import HOST_PARAMS
+    host_keys = {p["key"] for p in HOST_PARAMS}
+    for name, path in vau.presets.files().items():
+        d = json.loads(path.read_text())
+        assert d["model"]["name"] and d["measured"]["how"]
+        for uid, got in d["units"].items():
+            u = REG.get(uid)
+            assert u is not None, (name, uid)
+            keys = {p["key"] for p in u.m["params"]} | host_keys | set(u.m["targets"])
+            names = [p["name"] for p in got["presets"]]
+            assert len(names) == len(set(names)) and (got.get("start") is None or got["start"] in names)
+            for p in got["presets"]:
+                words = p["line"].split()
+                assert words[0] == uid and all(w.split("=")[0] in keys for w in words[1:]), (uid, p["line"])
+                assert p["held_out"]["broken"] == 0
+
+
+def test_the_catalogue_carries_a_models_presets_only_when_the_host_names_that_model():
+    plain = REG.catalogue()
+    assert "presets" not in plain and all("presets" not in e for e in plain["units"])
+    c = REG.catalogue(model="google/magenta-rt-2-small")
+    assert c["presets"]["model"]["name"] == "Magenta RT 2 small"
+    delay = next(e for e in c["units"] if e["id"] == "delay")
+    assert delay["start"] == "Feedback Loop" and len(delay["presets"]) == 7
+    assert sum(len(e.get("presets", [])) for e in c["units"]) == 75

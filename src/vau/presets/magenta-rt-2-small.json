@@ -1,0 +1,1297 @@
+{
+ "_": "Presets for the Core Collection's units, measured on one model. A preset is a chain line with a name and a tip; start names the preset a host should begin a unit at on this model, where its manifest default does little or breaks the output. See SPEC.md, section 5g.",
+ "model": {
+  "name": "Magenta RT 2 small",
+  "ids": [
+   "magenta-rt-2-small",
+   "mrt2_small",
+   "mrt2-small"
+  ],
+  "kind": "music"
+ },
+ "measured": {
+  "by": "Abliterator 0.2.10",
+  "made": "2026-11-23",
+  "how": "Chosen from a search of six seeds × 4 s of the Warm drone (Proc.render), none broken on any seed (calibrate.broken). Figures: median level-free timbre distance from the plain model on the same seed, mean change of centroid and level. A tiny Steer (0.001) gave 4.7 dB: the time units are heard in time, not in the spectrum. Each was then measured again on ten other seeds (21 to 30, 6 s): kept only if it broke on none; `held_out` gives those figures and which measures moved the same way beyond chance (sign-flip tests, Benjamini-Hochberg at 5%).",
+  "held_out": {
+   "n": "seeds measured",
+   "broken": "seeds on which the sound broke (0 for every preset here)",
+   "timbre_median": "median level-free timbre distance from the plain model on the same seed",
+   "centroid_mean": "mean change of the spectral centroid (brighter above zero)",
+   "level_mean": "mean change of level, dB",
+   "shape_db": "change of spectral shape, dB",
+   "heard": "the measures that moved the same way beyond chance (sign-flip tests, Benjamini-Hochberg at 5%): time (frame-to-frame similarity), centroid, level, shape"
+  },
+  "source": "https://vector-lab-tools.github.io/abliterator/tech-specs.html"
+ },
+ "units": {
+  "delay": {
+   "start": "Feedback Loop",
+   "presets": [
+    {
+     "name": "Ghost Trail",
+     "line": "delay layer=6 time=4 feedback=0.3 mix=0.2 keepnorm=1",
+     "tip": "An echo four frames (160 ms) back, at layer 6, with the stream kept to its size",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 4.05,
+      "centroid_mean": -17.68,
+      "level_mean": -1.93,
+      "shape_db": 1.53,
+      "heard": []
+     }
+    },
+    {
+     "name": "Slapback",
+     "line": "delay layer=6 time=2 feedback=0.3 mix=0.2 keepnorm=1",
+     "tip": "A short echo, two frames (80 ms) back, kept to size: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.04,
+      "centroid_mean": -25.85,
+      "level_mean": -1.17,
+      "shape_db": 2.09,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Long Echo",
+     "line": "delay layer=6 time=12 feedback=0.3 mix=0.2 keepnorm=1",
+     "tip": "An echo twelve frames (480 ms) back, kept to size: quieter",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 2.34,
+      "centroid_mean": -7.55,
+      "level_mean": -2.21,
+      "shape_db": 1.27,
+      "heard": [
+       "level"
+      ]
+     }
+    },
+    {
+     "name": "Deep Echo",
+     "line": "delay layer=12 time=4 feedback=0.3 mix=0.2 keepnorm=1",
+     "tip": "An echo four frames back at the last layer, kept to size",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.97,
+      "centroid_mean": -0.71,
+      "level_mean": -0.6,
+      "shape_db": 1.26,
+      "heard": []
+     }
+    },
+    {
+     "name": "Smear",
+     "line": "delay layer=2 time=4 feedback=0.3 mix=0.3 keepnorm=1",
+     "tip": "An early echo, at layer 2, with the stream kept to its size: each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 4.81,
+      "centroid_mean": -24.17,
+      "level_mean": -0.96,
+      "shape_db": 1.84,
+      "heard": [
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Feedback Loop",
+     "line": "delay layer=6 time=8 feedback=0.7 mix=0.8 keepnorm=1",
+     "tip": "A strong echo that feeds back on itself, kept to size: darker, quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.96,
+      "centroid_mean": -19.49,
+      "level_mean": -1.99,
+      "shape_db": 2.01,
+      "heard": [
+       "centroid",
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Late Repeats",
+     "line": "delay layer=12 time=2 feedback=0.6 mix=0.6 keepnorm=1",
+     "tip": "Short repeats with feedback at the last layer, kept to size: darker",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 4.6,
+      "centroid_mean": -27.07,
+      "level_mean": -1.18,
+      "shape_db": 1.87,
+      "heard": [
+       "centroid"
+      ]
+     }
+    }
+   ]
+  },
+  "reverb": {
+   "start": "Long Tail",
+   "presets": [
+    {
+     "name": "Afterglow",
+     "line": "reverb layer=6 decay=0.8 mix=0.2 keepnorm=1",
+     "tip": "A short tail of the stream's own past at layer 6, kept to size",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.22,
+      "centroid_mean": -28.78,
+      "level_mean": -0.37,
+      "shape_db": 2.1,
+      "heard": []
+     }
+    },
+    {
+     "name": "Wash",
+     "line": "reverb layer=12 decay=0.9 mix=0.3 keepnorm=1",
+     "tip": "A longer tail at the last layer, kept to size: darker",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.99,
+      "centroid_mean": -21.48,
+      "level_mean": 0.0,
+      "shape_db": 1.48,
+      "heard": [
+       "centroid"
+      ]
+     }
+    },
+    {
+     "name": "Short Room",
+     "line": "reverb layer=10 decay=0.6 mix=0.5 keepnorm=1",
+     "tip": "A short tail mixed in strongly at layer 10, kept to size: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.29,
+      "centroid_mean": -22.98,
+      "level_mean": -0.44,
+      "shape_db": 2.23,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Undertow",
+     "line": "reverb layer=2 decay=0.9 mix=0.3 keepnorm=1",
+     "tip": "An early tail, at layer 2, kept to size: quieter",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.36,
+      "centroid_mean": -6.68,
+      "level_mean": -3.4,
+      "shape_db": 2.3,
+      "heard": [
+       "level"
+      ]
+     }
+    },
+    {
+     "name": "Long Tail",
+     "line": "reverb layer=6 decay=0.99 mix=0.8 keepnorm=1",
+     "tip": "A tail of about a hundred frames (four seconds), kept to size: darker, each frame less like the one before it, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.4,
+      "centroid_mean": -57.41,
+      "level_mean": -0.74,
+      "shape_db": 3.32,
+      "heard": [
+       "centroid",
+       "shape",
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Infinite Hall",
+     "line": "reverb layer=6 decay=0.999 mix=1 keepnorm=1",
+     "tip": "A tail that hardly fades, all of it mixed in, kept to size: darker, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.96,
+      "centroid_mean": -57.07,
+      "level_mean": 0.38,
+      "shape_db": 3.11,
+      "heard": [
+       "centroid",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Late Bloom",
+     "line": "reverb layer=12 decay=0.98 mix=0.8 keepnorm=1",
+     "tip": "A long tail at the last layer, kept to size: darker, each frame less like the one before it, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.56,
+      "centroid_mean": -56.04,
+      "level_mean": 2.79,
+      "shape_db": 2.89,
+      "heard": [
+       "centroid",
+       "shape",
+       "time"
+      ]
+     }
+    }
+   ]
+  },
+  "beatrepeat": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Stutter",
+     "line": "beatrepeat layer=6 interval=8 length=2 mix=1",
+     "tip": "The default: the last two frames of every eight replay the frame before them",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.99,
+      "centroid_mean": 7.39,
+      "level_mean": 1.15,
+      "shape_db": 1.33,
+      "heard": []
+     }
+    },
+    {
+     "name": "Double Time",
+     "line": "beatrepeat layer=6 interval=4 length=2 mix=1",
+     "tip": "Half of every four frames held",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.29,
+      "centroid_mean": 7.12,
+      "level_mean": 1.6,
+      "shape_db": 1.9,
+      "heard": []
+     }
+    },
+    {
+     "name": "Half Bar",
+     "line": "beatrepeat layer=6 interval=8 length=4 mix=1",
+     "tip": "Half of every eight frames held: darker, each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.59,
+      "centroid_mean": -27.36,
+      "level_mean": 0.91,
+      "shape_db": 1.04,
+      "heard": [
+       "centroid",
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Tape Catch",
+     "line": "beatrepeat layer=6 interval=3 length=1 mix=1",
+     "tip": "One frame in three held, a fast catch",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.06,
+      "centroid_mean": -38.64,
+      "level_mean": 2.11,
+      "shape_db": 2.0,
+      "heard": []
+     }
+    },
+    {
+     "name": "Deep Stutter",
+     "line": "beatrepeat layer=2 interval=8 length=4 mix=1",
+     "tip": "Half of every eight frames held, at layer 2: each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.26,
+      "centroid_mean": -23.32,
+      "level_mean": 1.5,
+      "shape_db": 1.75,
+      "heard": [
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Long Loop",
+     "line": "beatrepeat layer=12 interval=16 length=8 mix=1",
+     "tip": "Eight frames of every sixteen held at the last layer",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 3.38,
+      "centroid_mean": -16.9,
+      "level_mean": 0.85,
+      "shape_db": 1.09,
+      "heard": []
+     }
+    }
+   ]
+  },
+  "compressor": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Glue",
+     "line": "compressor layer=6 ratio=4 makeup=1 thresh=1",
+     "tip": "The default: positions larger than usual pulled back at 4:1: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.64,
+      "centroid_mean": -8.33,
+      "level_mean": 3.26,
+      "shape_db": 3.78,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Squeeze",
+     "line": "compressor layer=6 ratio=8 makeup=1 thresh=0.8",
+     "tip": "8:1 from a little below the usual size: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 12.77,
+      "centroid_mean": -1.2,
+      "level_mean": 6.35,
+      "shape_db": 10.63,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Flatten",
+     "line": "compressor layer=6 ratio=4 makeup=1 thresh=0.3",
+     "tip": "4:1 from a third of the usual size: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 19.92,
+      "centroid_mean": 31.63,
+      "level_mean": 10.9,
+      "shape_db": 16.14,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Half Power",
+     "line": "compressor layer=6 ratio=4 makeup=0.5 thresh=1",
+     "tip": "The default, then halved: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 20.28,
+      "centroid_mean": 39.79,
+      "level_mean": 9.97,
+      "shape_db": 17.58,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Crush Wall",
+     "line": "compressor layer=6 ratio=20 makeup=1 thresh=0.5",
+     "tip": "20:1 from half the usual size: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 19.19,
+      "centroid_mean": 93.44,
+      "level_mean": 10.37,
+      "shape_db": 16.98,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Top Lid",
+     "line": "compressor layer=10 ratio=20 makeup=1 thresh=1",
+     "tip": "20:1 at layer 10, on the largest positions only",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.51,
+      "centroid_mean": -5.98,
+      "level_mean": 3.04,
+      "shape_db": 3.93,
+      "heard": []
+     }
+    }
+   ]
+  },
+  "saturator": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Gentle",
+     "line": "saturator layer=6 mix=1 drive=0.5",
+     "tip": "Half the default drive: louder",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.15,
+      "centroid_mean": 8.83,
+      "level_mean": 6.39,
+      "shape_db": 2.21,
+      "heard": [
+       "level"
+      ]
+     }
+    },
+    {
+     "name": "Warm",
+     "line": "saturator layer=6 mix=1 drive=1",
+     "tip": "The default: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 9.38,
+      "centroid_mean": -29.52,
+      "level_mean": 13.24,
+      "shape_db": 4.92,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Half Melt",
+     "line": "saturator layer=6 mix=0.5 drive=4",
+     "tip": "Drive 4, half of it mixed in: darker, louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 9.93,
+      "centroid_mean": -69.28,
+      "level_mean": 12.69,
+      "shape_db": 8.61,
+      "heard": [
+       "centroid",
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Burn",
+     "line": "saturator layer=6 mix=1 drive=4",
+     "tip": "Drive 4: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 19.15,
+      "centroid_mean": 125.08,
+      "level_mean": 4.62,
+      "shape_db": 17.55,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Meltdown",
+     "line": "saturator layer=6 mix=1 drive=8",
+     "tip": "Drive 8: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 19.34,
+      "centroid_mean": 3.57,
+      "level_mean": 11.29,
+      "shape_db": 17.45,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Glass Fuzz",
+     "line": "saturator layer=12 mix=1 drive=4",
+     "tip": "Drive 4 at the last layer: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 18.33,
+      "centroid_mean": 45.89,
+      "level_mean": 12.18,
+      "shape_db": 15.72,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    }
+   ]
+  },
+  "erosion": {
+   "start": "Bitcrush",
+   "presets": [
+    {
+     "name": "Bitcrush",
+     "line": "erosion layer=6 bits=1 hold=1",
+     "tip": "One bit: each coordinate rounded to a few steps: darker, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.81,
+      "centroid_mean": -70.76,
+      "level_mean": 2.86,
+      "shape_db": 4.5,
+      "heard": [
+       "centroid",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Two-Bit",
+     "line": "erosion layer=12 bits=2 hold=1",
+     "tip": "Two bits at the last layer",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.93,
+      "centroid_mean": 9.7,
+      "level_mean": 3.16,
+      "shape_db": 2.6,
+      "heard": []
+     }
+    },
+    {
+     "name": "Crumble",
+     "line": "erosion layer=12 bits=1 hold=4",
+     "tip": "One bit at the last layer, each position held for four frames: darker, each frame more like the ones before it, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.75,
+      "centroid_mean": -61.38,
+      "level_mean": 1.17,
+      "shape_db": 3.31,
+      "heard": [
+       "centroid",
+       "shape",
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Stepped",
+     "line": "erosion layer=6 bits=4 hold=4",
+     "tip": "Four bits, held for four frames: each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.7,
+      "centroid_mean": -28.02,
+      "level_mean": 4.58,
+      "shape_db": 2.28,
+      "heard": [
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Freeze 8",
+     "line": "erosion layer=6 bits=16 hold=8",
+     "tip": "No rounding to speak of; each position held for eight frames (320 ms): each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.71,
+      "centroid_mean": -34.67,
+      "level_mean": 1.67,
+      "shape_db": 2.05,
+      "heard": [
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Hard Freeze",
+     "line": "erosion layer=6 bits=16 hold=16",
+     "tip": "Each position held for sixteen frames (640 ms): each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.41,
+      "centroid_mean": -23.26,
+      "level_mean": 1.65,
+      "shape_db": 2.6,
+      "heard": [
+       "time"
+      ]
+     }
+    },
+    {
+     "name": "Late Freeze",
+     "line": "erosion layer=12 bits=16 hold=8",
+     "tip": "Held for eight frames, at the last layer: darker, each frame more like the ones before it",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 4.93,
+      "centroid_mean": -46.95,
+      "level_mean": 2.65,
+      "shape_db": 2.25,
+      "heard": [
+       "centroid",
+       "time"
+      ]
+     }
+    }
+   ]
+  },
+  "gate": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Thin",
+     "line": "gate layer=6 sink=0 keep=0.1",
+     "tip": "Keeps the largest tenth of the coordinates: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.74,
+      "centroid_mean": -6.3,
+      "level_mean": 6.78,
+      "shape_db": 3.01,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Skeleton",
+     "line": "gate layer=6 sink=0 keep=0.02",
+     "tip": "Keeps the largest 2%: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.31,
+      "centroid_mean": -19.84,
+      "level_mean": 5.52,
+      "shape_db": 4.39,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Hollow",
+     "line": "gate layer=10 sink=0 keep=0.05",
+     "tip": "Keeps the largest 5% at layer 10: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.48,
+      "centroid_mean": -12.66,
+      "level_mean": 3.54,
+      "shape_db": 5.56,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Bones",
+     "line": "gate layer=11 sink=0 keep=0.05",
+     "tip": "Keeps the largest 5% at layer 11: brighter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 10.42,
+      "centroid_mean": 83.85,
+      "level_mean": -2.85,
+      "shape_db": 8.57,
+      "heard": [
+       "centroid",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Sparse Glass",
+     "line": "gate layer=12 sink=0 keep=0.1",
+     "tip": "Keeps the largest tenth at the last layer: brighter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 15.35,
+      "centroid_mean": 111.57,
+      "level_mean": 3.81,
+      "shape_db": 14.29,
+      "heard": [
+       "centroid",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Needlepoint",
+     "line": "gate layer=12 sink=0 keep=0.03",
+     "tip": "Keeps the largest 3% at the last layer: brighter, louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 16.56,
+      "centroid_mean": 130.74,
+      "level_mean": 5.19,
+      "shape_db": 14.67,
+      "heard": [
+       "centroid",
+       "level",
+       "shape"
+      ]
+     }
+    }
+   ]
+  },
+  "limiter": {
+   "start": "Lid",
+   "presets": [
+    {
+     "name": "Tame",
+     "line": "limiter layer=10 sink=0 ceiling=0.995",
+     "tip": "Clamps the few largest coordinates a little, at layer 10",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.78,
+      "centroid_mean": -17.97,
+      "level_mean": 0.05,
+      "shape_db": 3.08,
+      "heard": []
+     }
+    },
+    {
+     "name": "Lid",
+     "line": "limiter layer=10 sink=0 ceiling=0.99",
+     "tip": "The usual ceiling at layer 10: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 9.38,
+      "centroid_mean": 60.56,
+      "level_mean": 2.38,
+      "shape_db": 5.25,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Clamp Down",
+     "line": "limiter layer=12 sink=0 ceiling=0.98",
+     "tip": "A lower ceiling at the last layer: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.51,
+      "centroid_mean": 15.7,
+      "level_mean": 4.16,
+      "shape_db": 3.2,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Brickwall",
+     "line": "limiter layer=12 sink=0 ceiling=0.95",
+     "tip": "Lower still, at the last layer: louder",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.48,
+      "centroid_mean": 22.32,
+      "level_mean": 7.62,
+      "shape_db": 2.77,
+      "heard": [
+       "level"
+      ]
+     }
+    },
+    {
+     "name": "Flat Top",
+     "line": "limiter layer=12 sink=0 ceiling=0.9",
+     "tip": "A ceiling at 0.9, at the last layer: louder",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.71,
+      "centroid_mean": 14.13,
+      "level_mean": 9.23,
+      "shape_db": 3.58,
+      "heard": [
+       "level"
+      ]
+     }
+    },
+    {
+     "name": "Tail Clamp",
+     "line": "limiter layer=12 sink=0 ceiling=0.99",
+     "tip": "The default ceiling at the last layer: louder",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.75,
+      "centroid_mean": -21.52,
+      "level_mean": 4.14,
+      "shape_db": 1.74,
+      "heard": [
+       "level"
+      ]
+     }
+    }
+   ]
+  },
+  "eq": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Tilt Dark",
+     "line": "eq layer=8 low=1.3 mid=1 high=0.7",
+     "tip": "The default: the main directions up, the minor ones down: darker, louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.24,
+      "centroid_mean": -64.67,
+      "level_mean": 12.88,
+      "shape_db": 5.29,
+      "heard": [
+       "centroid",
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Sky",
+     "line": "eq layer=12 low=1 mid=1 high=1.25",
+     "tip": "The minor directions up by a quarter at the last layer: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.26,
+      "centroid_mean": -38.72,
+      "level_mean": 1.64,
+      "shape_db": 4.87,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Core Cut",
+     "line": "eq layer=8 low=0 mid=1 high=1",
+     "tip": "The eight main directions taken out: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.74,
+      "centroid_mean": 43.62,
+      "level_mean": -6.12,
+      "shape_db": 6.41,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Mid Push",
+     "line": "eq layer=8 low=1 mid=2 high=1",
+     "tip": "The middle directions doubled: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 15.01,
+      "centroid_mean": -7.72,
+      "level_mean": 10.45,
+      "shape_db": 10.08,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Mid Hole",
+     "line": "eq layer=8 low=1 mid=0 high=1",
+     "tip": "The middle directions taken out: darker",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.01,
+      "centroid_mean": -43.79,
+      "level_mean": 0.98,
+      "shape_db": 3.41,
+      "heard": [
+       "centroid"
+      ]
+     }
+    },
+    {
+     "name": "Half Body",
+     "line": "eq layer=8 low=0.5 mid=0.5 high=0.5",
+     "tip": "Every band halved: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.22,
+      "centroid_mean": 36.86,
+      "level_mean": -1.53,
+      "shape_db": 4.78,
+      "heard": [
+       "shape"
+      ]
+     }
+    }
+   ]
+  },
+  "multiband": {
+   "start": "Low Squeeze",
+   "presets": [
+    {
+     "name": "Low Squeeze",
+     "line": "multiband layer=6 ratio=20 band=low thresh=0.5",
+     "tip": "The eight main directions compressed hard: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.29,
+      "centroid_mean": 16.26,
+      "level_mean": -3.57,
+      "shape_db": 3.85,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Early Low",
+     "line": "multiband layer=2 ratio=20 band=low thresh=0.5",
+     "tip": "The same at layer 2: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.61,
+      "centroid_mean": 12.89,
+      "level_mean": -5.36,
+      "shape_db": 4.96,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Soft Low",
+     "line": "multiband layer=10 ratio=8 band=low thresh=0.5",
+     "tip": "The main directions at 8:1, layer 10",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.52,
+      "centroid_mean": 34.28,
+      "level_mean": -4.07,
+      "shape_db": 3.9,
+      "heard": []
+     }
+    },
+    {
+     "name": "Floor Lift",
+     "line": "multiband layer=10 ratio=20 band=low thresh=0.3",
+     "tip": "The main directions hard from a third of their size, layer 10: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 11.59,
+      "centroid_mean": 101.28,
+      "level_mean": -7.49,
+      "shape_db": 7.6,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Top Squeeze",
+     "line": "multiband layer=6 ratio=20 band=high thresh=0.5",
+     "tip": "The minor directions compressed hard",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.67,
+      "centroid_mean": -14.34,
+      "level_mean": 4.84,
+      "shape_db": 3.26,
+      "heard": []
+     }
+    },
+    {
+     "name": "All Bands Hard",
+     "line": "multiband layer=6 ratio=8 band=all thresh=0.3",
+     "tip": "Every band at 8:1 from a third of its size: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 6.84,
+      "centroid_mean": 45.82,
+      "level_mean": -2.99,
+      "shape_db": 4.53,
+      "heard": [
+       "shape"
+      ]
+     }
+    }
+   ]
+  },
+  "shifter": {
+   "start": null,
+   "presets": [
+    {
+     "name": "Turn",
+     "line": "shifter layer=6 dir=brightness dir2=pulse angle=45",
+     "tip": "The default: 45 degrees in the plane of the two directions: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.73,
+      "centroid_mean": 32.11,
+      "level_mean": -4.09,
+      "shape_db": 5.02,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Quarter Turn",
+     "line": "shifter layer=6 dir=brightness dir2=pulse angle=90",
+     "tip": "90 degrees: the first direction becomes the second: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.81,
+      "centroid_mean": 49.22,
+      "level_mean": -4.9,
+      "shape_db": 6.18,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Three-Eighths",
+     "line": "shifter layer=6 dir=brightness dir2=pulse angle=135",
+     "tip": "135 degrees: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 10.07,
+      "centroid_mean": 73.28,
+      "level_mean": -6.89,
+      "shape_db": 7.36,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Flip",
+     "line": "shifter layer=6 dir=brightness dir2=pulse angle=180",
+     "tip": "180 degrees: both directions reversed: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 9.68,
+      "centroid_mean": 84.62,
+      "level_mean": -10.01,
+      "shape_db": 7.19,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Counter Turn",
+     "line": "shifter layer=6 dir=brightness dir2=pulse angle=-45",
+     "tip": "45 degrees the other way: quieter, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 12.35,
+      "centroid_mean": 91.07,
+      "level_mean": -7.44,
+      "shape_db": 7.4,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Early Turn",
+     "line": "shifter layer=2 dir=brightness dir2=pulse angle=45",
+     "tip": "45 degrees at layer 2: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 12.89,
+      "centroid_mean": 25.95,
+      "level_mean": -1.63,
+      "shape_db": 9.67,
+      "heard": [
+       "shape"
+      ]
+     }
+    }
+   ]
+  },
+  "neuron": {
+   "start": "Ten Set",
+   "presets": [
+    {
+     "name": "Bright Push",
+     "line": "neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136 op=add value=3",
+     "tip": "Adds 3 to the 32 neurons of block 11 that write most along Brightness",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.69,
+      "centroid_mean": -15.71,
+      "level_mean": 2.86,
+      "shape_db": 2.89,
+      "heard": []
+     }
+    },
+    {
+     "name": "Bright Cells",
+     "line": "neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136,3899,2872,1255,3496,1351,934,2014,3981,1231,1353,939,3078,3108,2450,441,4073,2056,8,617,658,1604,1081,1278,179,3583,3774,339,1465,1401,3450,2798,1926 op=scale value=20",
+     "tip": "The 64 neurons of block 11 that write most along Brightness, ×20",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 7.16,
+      "centroid_mean": -27.14,
+      "level_mean": 1.28,
+      "shape_db": 5.14,
+      "heard": []
+     }
+    },
+    {
+     "name": "Dark Cells",
+     "line": "neuron block=11 n=293,3870,3444,245,1954,2828,381,26,2619,2993,211,2885,3340,197,2481,1013,3592,1244,1635,3080,83,3056,309,4013,1562,1928,587,2817,1019,3864,2728,2812,1423,1729,271,1994,429,267,562,1216,638,652,119,674,1425,3837,999,1696,1020,3322,3691,1575,282,2484,971,3016,539,315,2278,4055,3095,3660,514,553 op=scale value=20",
+     "tip": "The 64 that write most against Brightness, ×20: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.05,
+      "centroid_mean": -22.74,
+      "level_mean": 2.6,
+      "shape_db": 4.94,
+      "heard": [
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Pulse Cells",
+     "line": "neuron block=11 n=1282,1216,154,670,1842,931,1160,516,438,2413,1930,3401,737,1793,4065,2370,3407,2651,1266,517,2543,1261,1546,1278,2538,1827,3059,92,3681,3256,2552,378,1399,1463,2145,166,2933,962,3485,640,1688,3159,1653,2129,712,2455,2695,293,1881,2418,3265,582,3163,2710,2367,322,3697,928,4006,2043,223,976,2348,83 op=scale value=20",
+     "tip": "The 64 that write most along Pulse, ×20: louder, spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 8.22,
+      "centroid_mean": -25.05,
+      "level_mean": 8.7,
+      "shape_db": 4.71,
+      "heard": [
+       "level",
+       "shape"
+      ]
+     }
+    },
+    {
+     "name": "Silence Cells",
+     "line": "neuron block=11 n=41,3511,3657,1644,3665,1886,3072,519,3494,3878,2048,1938,2451,400,2036,3326,2959,1877,16,3164,2773,3358,1656,2456,857,2221,891,1505,985,865,3214,2136,3899,2872,1255,3496,1351,934,2014,3981,1231,1353,939,3078,3108,2450,441,4073,2056,8,617,658,1604,1081,1278,179,3583,3774,339,1465,1401,3450,2798,1926 op=zero",
+     "tip": "The 64 Brightness neurons of block 11 switched off",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 5.81,
+      "centroid_mean": 7.11,
+      "level_mean": 0.41,
+      "shape_db": 1.78,
+      "heard": []
+     }
+    },
+    {
+     "name": "Ten Set",
+     "line": "neuron block=10 n=2993,861,501,456,2633,2755,3898,1381,917,3303,2286,2724,2471,581,997,527,107,245,3561,3507,1903,232,1380,1572,618,1857,161,913,3409,1121,1166,1485 op=set value=8",
+     "tip": "The 32 Brightness neurons of block 10 held at 8: spectral shape changed",
+     "held_out": {
+      "n": 10,
+      "broken": 0,
+      "timbre_median": 11.18,
+      "centroid_mean": 116.84,
+      "level_mean": -1.53,
+      "shape_db": 7.95,
+      "heard": [
+       "shape"
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

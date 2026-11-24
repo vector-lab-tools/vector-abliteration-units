@@ -31,6 +31,12 @@ class Host:
     def capabilities(self) -> Set[str]:
         return set()
 
+    def sink(self) -> bool:
+        """Whether the model's first position is an attention sink, as it is in most language
+        models; units then leave it alone. A host whose model has none (an audio model, whose
+        first position is just its first frame) returns False, and units bend it like any other."""
+        return True
+
     def error(self, lineno: int, msg: str) -> Exception:
         return UnitError(f"Line {lineno}: {msg}")
 
