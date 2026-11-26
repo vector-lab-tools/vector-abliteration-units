@@ -11,7 +11,7 @@
 
 **Author:** David M. Berry  
 **Institution:** University of Sussex  
-**Version:** 0.3.1 (VAU 1), in development  
+**Version:** 0.3.2 (VAU 1), in development  
 **Licence:** GNU General Public License, version 3 or later (GPL-3.0-or-later). See `LICENSE`.  
 **Site:** <https://vector-lab-tools.github.io/vector-abliteration-units/>, the standard, the built-in units and the figures (from `docs/`)
 
