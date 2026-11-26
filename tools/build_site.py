@@ -90,13 +90,12 @@ def page(file: str, title: str, description: str, kicker: str, h1: str, tagline:
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   <link rel="icon" href="logo.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#f3f2ee" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#101217" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#101217">
   <meta property="og:title" content="{esc(title)}">
   <meta property="og:description" content="{esc(description)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{SITE}{file}">
-  <script>(function(){{try{{var t=localStorage.getItem('vau-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
+  <script>(function(){{try{{var t=localStorage.getItem('vau-theme');if(t!=='light')t='dark';document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
   <link rel="stylesheet" href="{stamp("style.css")}">{css}
 </head>
 <body>
