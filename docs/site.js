@@ -4,7 +4,7 @@
   var root = document.documentElement;
   function current() {
     var a = root.getAttribute('data-theme');
-    return a === 'light' ? 'light' : 'dark';          // dark unless the reader chose light
+    return a === 'dark' ? 'dark' : 'light';          // light unless the reader chose dark
   }
   document.querySelectorAll('.theme-toggle').forEach(function (b) {
     b.addEventListener('click', function () {
