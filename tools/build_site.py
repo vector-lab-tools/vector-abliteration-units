@@ -62,6 +62,7 @@ esc = html.escape
 # The page around the content
 # ---------------------------------------------------------------------------------------------
 
+NUMWORD = {11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen"}
 NAV = [("index.html", "Home"), ("spec.html", "The standard"), ("units.html", "Text"), ("audio.html", "Audio"), (REPO, "GitHub")]
 MOON = ('<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
         'stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>')
@@ -330,9 +331,9 @@ def presets_table(u) -> str:
             f'<td>{esc(p["tip"])}</td><td>{esc(", ".join(HEARD.get(h, h) for h in (p["held_out"].get("heard") or [])) or "none beyond chance")}</td></tr>'
             for p in got["presets"])
         h = d["measured"]
-        out.append(f'<h3>Presets on {esc(d["model"]["name"])}</h3>\n<p class="small">{len(got["presets"])} presets measured on {esc(d["model"]["name"])}, a {esc(d["model"].get("kind", ""))} model, '
-                   f'each kept only if it broke the output on none of {got["presets"][0]["held_out"]["n"]} held-out seeds; the last column says which measures moved the same way beyond chance there. '
-                   f'Presets are per model: on another model the same line can do something else.</p>\n'
+        out.append(f'<h3>Presets on {esc(d["model"]["name"])}</h3>\n<p class="small">{len(got["presets"])} presets measured on {esc(d["model"]["name"])}, a {esc(d["model"].get("kind", ""))} model. '
+                   f'Each was kept only if it broke the output on none of {got["presets"][0]["held_out"]["n"]} held-out seeds, and the last column gives the measures that moved the same way on those seeds beyond chance. '
+                   f'The same line can do something else on another model.</p>\n'
                    f'<div class="table-wrap"><table><thead><tr><th>Preset</th><th>Line</th><th>What it does</th><th>Heard beyond chance</th></tr></thead><tbody>{rows}</tbody></table></div>')
     return "\n".join(out)
 
@@ -355,7 +356,7 @@ def card_frame(u, caption=False, hint=False) -> str:
     return (f'<figure class="uc{wide}"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b>{bar}</b></div>'
             f'<div class="uc-card" data-vau-card="{u.id}" data-values="{esc(json.dumps(data))}"></div></div>'
             + (f'<figcaption>{name}</figcaption>' if caption else "")
-            + ('<p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p>' if hint and vau.explain.explainer(u) else "")
+            + ('<p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p>' if hint and vau.explain.explainer(u) else "")
             + "</figure>")
 
 
@@ -483,7 +484,7 @@ def build_units():
         "units.html", "VAU text · Vector Abliteration Units",
         "The Core Collection, the sixteen Vector Abliteration Units the package ships, from their manifests: what each does, its parameters with their ranges and neutral values, and what it needs from a host.",
         f"VAU text · the Core Collection · {len(us)} units in VAU {vau.__version__}", "VAU text",
-        "The Core Collection, the units the package ships, on a language model: sixteen of them, effects that act on the stream, fitted units, a neuron editor and meters. Each is one file in <code>src/vau/units/</code>, and each figure animates the change its code makes on GPT-2 small. The same units, tuned for an audio model, are <a href=\"audio.html\">VAU audio</a>.",
+        "The sixteen units the package ships, the Core Collection, on a language model: effects that act on the stream, units that act inside a block, and meters. Each is one file in <code>src/vau/units/</code>, and each figure animates the change its code makes on GPT-2 small. The same units tuned for an audio model are in <a href=\"audio.html\">VAU audio</a>.",
         content, scripts=["vau-explain.js", "vau-catalogue.js", "vau-card.js", "vau-cards.js"], styles=["vau-explain.css", "vau-card.css", "vau-core.css"]), encoding="utf-8")
     return us
 
@@ -932,7 +933,7 @@ def build_audio():
             bar = esc(m.get("short") or m["title"])
             card = (f'<figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b>{bar}</b></div>'
                     f'<div class="uc-card" data-vau-card="{u.id}" data-values="{esc(json.dumps(vals))}"></div></div>'
-                    f'<p class="uc-hint">Turn a control: the sweep beside it marks the nearest setting it was heard at.</p></figure>')
+                    f'<p class="uc-hint">When a control is turned, the sweep beside it marks the nearest setting it was recorded at.</p></figure>')
             rows = []
             for p in m["params"]:
                 if p.get("hidden"):
@@ -964,15 +965,15 @@ def build_audio():
           <thead><tr><th>Key</th><th>Label</th><th>Range</th><th>Default</th><th>Held on the model</th><th>Tip</th></tr></thead>
           <tbody>{"".join(rows)}</tbody>
         </table></div>
-        <p class="small">Held on the model: the part of the range in which the sound neither fell silent nor overdrove on the seeds it was measured on. {f'Measured placements: {esc(", ".join(map(str, m["places"])))}.' if m.get("places") else ""}</p>
+        <p class="small">Held on the model is the part of the range in which the sound neither fell silent nor overdrove on the seeds measured. {f'Measured placements: {esc(", ".join(map(str, m["places"])))}.' if m.get("places") else ""}</p>
         <h3>Help</h3>
         <p class="help">{m.get("help", "")}</p>
         </details>
       </article>""")
     content = f"""    <svg width="0" height="0" style="position:absolute" aria-hidden="true">{CORE_DEFS}</svg>
     <div class="wrap">
-      <p>The Audio Collection is the Core Collection's units tuned for an audio model: the same files and the same edits, with the names, defaults, ranges, host-feature settings and placements that were found to work on {esc(tm["name"])}, where a position is {esc(tm["positions"])} and the first position is no attention sink. A host loads it with <code>vau.Registry(collection="audio")</code>; what it changes is one file, <a href="{REPO}/blob/main/src/vau/collections/audio.json"><code>src/vau/collections/audio.json</code></a> (<a href="spec.html#5h-the-audio-collection-and-mlx-versions">SPEC 5h</a>). Hosts whose model runs in MLX can use <code>vau.mlx</code>, the MLX versions of Neuron, Quantise and Abliterate.</p>
-      <p>Each unit's sweep is {esc(tm["name"])} playing a warm drone (seed 1), one control moved at a time from the unit's example line, the rest held, rendered once and recorded. <b>Original</b> is the model unchanged. A setting marked <span class="au-bad-key">!</span> fell silent or overdrove there. The sweeps start from the Core Collection's example lines, not from this collection's defaults: the settings at which Lookback and Running Average fell silent are why the collection turns Keep size on for both. A preset's own line was not rendered; choosing one marks the nearest setting of each control.</p>
+      <p>The Audio Collection is the Core Collection's units tuned for an audio model: the same files and the same edits, with the names, defaults, ranges, host-feature settings and placements that were found to work on {esc(tm["name"])}, where a position is {esc(tm["positions"])} and the first position holds no attention sink. A host loads it with <code>vau.Registry(collection="audio")</code>, and everything it changes is in one file, <a href="{REPO}/blob/main/src/vau/collections/audio.json"><code>src/vau/collections/audio.json</code></a> (<a href="spec.html#5h-the-audio-collection-and-mlx-versions">SPEC 5h</a>). Hosts whose model runs in MLX can use <code>vau.mlx</code>, the MLX versions of Neuron, Quantise and Abliterate.</p>
+      <p>Each sweep is {esc(tm["name"])} playing a warm drone (seed 1), rendered once and recorded, with one control moved at a time from the unit's example line and the others held where they were. <b>Original</b> is the model unchanged, and a setting marked <span class="au-bad-key">!</span> fell silent or overdrove. The sweeps start from the Core Collection's example lines, which are not this collection's defaults; indeed, it was the settings at which Lookback and Running Average fell silent that led the collection to turn Keep size on for both. The presets' own lines were not rendered, so choosing a preset marks the nearest setting of each control.</p>
       <nav class="unit-index" aria-label="Units">
 {chr(10).join(index)}
       </nav>
@@ -982,7 +983,7 @@ def build_audio():
         "audio.html", "VAU audio · Vector Abliteration Units",
         f"The Audio Collection: the Vector Abliteration Units tuned for an audio model, {tm['name']}, with each unit's sweep to listen to, its presets and what the collection changes.",
         f"VAU audio · the Audio Collection · {len(byid)} units in VAU {vau.__version__}", "VAU audio",
-        f"The same units, tuned for an audio model and heard on it: {len(byid)} of them, with the names, defaults and ranges that work on {esc(tm['name'])}, the presets measured there, and each unit's sweep to listen to. The units on a language model are <a href=\"units.html\">VAU text</a>.",
+        f"{NUMWORD.get(len(byid), str(len(byid))).capitalize()} of the same units, tuned for an audio model, {esc(tm['name'])}, and recorded on it. Each has the names, defaults and ranges that work there, the presets measured on the model, and a sweep to listen to. For the units on a language model, see <a href=\"units.html\">VAU text</a>.",
         content, scripts=["vau-catalogue-audio.js", "vau-audio.js", "vau-card.js", "vau-cards.js", "vau-listen.js"], styles=["vau-card.css", "vau-core.css"]), encoding="utf-8")
     return list(byid.values())
 

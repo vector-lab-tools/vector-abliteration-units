@@ -18,7 +18,7 @@ UNIT = {
     "help": "Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the "
             "stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as "
             "rounding a model's weights to fewer bits degrades the weights. Where the model has an attention sink at the first position, that position is left as it is. Bits 16 and hold 1 are neutral."
-            "<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p>",
+            "<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p>",
     "version": "1.0", "author": "David M. Berry", "licence": "GPL-3.0-or-later",
 }
 

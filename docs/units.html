@@ -49,7 +49,7 @@
     <div class="wrap hero-inner">
       <span class="kicker">VAU text · the Core Collection · 16 units in VAU 0.3.1</span>
       <h1>VAU text</h1>
-      <p class="tagline">The Core Collection, the units the package ships, on a language model: sixteen of them, effects that act on the stream, fitted units, a neuron editor and meters. Each is one file in <code>src/vau/units/</code>, and each figure animates the change its code makes on GPT-2 small. The same units, tuned for an audio model, are <a href="audio.html">VAU audio</a>.</p>
+      <p class="tagline">The sixteen units the package ships, the Core Collection, on a language model: effects that act on the stream, units that act inside a block, and meters. Each is one file in <code>src/vau/units/</code>, and each figure animates the change its code makes on GPT-2 small. The same units tuned for an audio model are in <a href="audio.html">VAU audio</a>.</p>
     </div>
   </section>
 
@@ -85,7 +85,7 @@
       </nav>
       <article class="unit reveal" id="compressor">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Shrink</b></div><div class="uc-card" data-vau-card="compressor" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;makeup&quot;: &quot;1&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Shrink</b></div><div class="uc-card" data-vau-card="compressor" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;makeup&quot;: &quot;1&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Norm Shrink</h2><span class="id">compressor</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Above a threshold, reduces the stream&#x27;s size at each position by a ratio</p>
@@ -129,7 +129,7 @@
       </article>
       <article class="unit reveal" id="saturator">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Squash</b></div><div class="uc-card" data-vau-card="saturator" data-values="{&quot;mix&quot;: &quot;1&quot;, &quot;drive&quot;: &quot;2&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Squash</b></div><div class="uc-card" data-vau-card="saturator" data-values="{&quot;mix&quot;: &quot;1&quot;, &quot;drive&quot;: &quot;2&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Tanh Squash</h2><span class="id">saturator</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Soft-clips each dimension of the stream, harder as the drive rises</p>
@@ -155,7 +155,7 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">Each dimension soft-clipped with tanh at three times its typical spread divided by the drive. Mix 0 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">Each dimension soft-clipped with tanh at three times its typical spread divided by the drive. Mix 0 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">saturator layer=6 drive=2</span><span>code(u)</span></div><pre><code>saturator_edit(3 * spread[layer] / 2, mix=1)
@@ -172,7 +172,7 @@
       </article>
       <article class="unit reveal" id="delay">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Lookback</b></div><div class="uc-card" data-vau-card="delay" data-values="{&quot;time&quot;: &quot;4&quot;, &quot;feedback&quot;: &quot;0.3&quot;, &quot;mix&quot;: &quot;0.5&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Lookback</b></div><div class="uc-card" data-vau-card="delay" data-values="{&quot;time&quot;: &quot;4&quot;, &quot;feedback&quot;: &quot;0.3&quot;, &quot;mix&quot;: &quot;0.5&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Lookback</h2><span class="id">delay</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Adds the stream from some positions back: an echo, with feedback</p>
@@ -223,7 +223,7 @@
       </article>
       <article class="unit reveal" id="reverb">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Average</b></div><div class="uc-card" data-vau-card="reverb" data-values="{&quot;decay&quot;: &quot;0.8&quot;, &quot;mix&quot;: &quot;0.5&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Average</b></div><div class="uc-card" data-vau-card="reverb" data-values="{&quot;decay&quot;: &quot;0.8&quot;, &quot;mix&quot;: &quot;0.5&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Running Average</h2><span class="id">reverb</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Adds a decaying average of the earlier positions</p>
@@ -274,7 +274,7 @@
       </article>
       <article class="unit reveal" id="erosion">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Quantise</b></div><div class="uc-card" data-vau-card="erosion" data-values="{&quot;bits&quot;: &quot;4&quot;, &quot;hold&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Quantise</b></div><div class="uc-card" data-vau-card="erosion" data-values="{&quot;bits&quot;: &quot;4&quot;, &quot;hold&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Quantise</h2><span class="id">erosion</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Quantises the stream to few levels, or holds it over several positions</p>
@@ -300,7 +300,7 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as rounding a model's weights to fewer bits degrades the weights. Where the model has an attention sink at the first position, that position is left as it is. Bits 16 and hold 1 are neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">Rounds each dimension to one of 2<sup>bits</sup> steps across six times its spread, and holds the stream of one position over the next <i>hold</i> − 1. It degrades the activations, much as rounding a model's weights to fewer bits degrades the weights. Where the model has an attention sink at the first position, that position is left as it is. Bits 16 and hold 1 are neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">erosion layer=6 bits=4</span><span>code(u)</span></div><pre><code>erosion_edit(step=6 * spread[layer] / 2**4, hold=1, held={})
@@ -333,7 +333,7 @@
       </article>
       <article class="unit reveal" id="shifter">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Rotate</b></div><div class="uc-card" data-vau-card="shifter" data-values="{&quot;dir&quot;: &quot;negation&quot;, &quot;dir2&quot;: &quot;not-x-but-y&quot;, &quot;angle&quot;: &quot;90&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Rotate</b></div><div class="uc-card" data-vau-card="shifter" data-values="{&quot;dir&quot;: &quot;negation&quot;, &quot;dir2&quot;: &quot;not-x-but-y&quot;, &quot;angle&quot;: &quot;90&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Rotate</h2><span class="id">shifter</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Rotates the stream in the plane of two directions</p>
@@ -376,7 +376,7 @@
       </article>
       <article class="unit reveal" id="eq">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Bands</b></div><div class="uc-card" data-vau-card="eq" data-values="{&quot;low&quot;: &quot;1&quot;, &quot;mid&quot;: &quot;1&quot;, &quot;high&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Bands</b></div><div class="uc-card" data-vau-card="eq" data-values="{&quot;low&quot;: &quot;1&quot;, &quot;mid&quot;: &quot;1&quot;, &quot;high&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Principal Bands</h2><span class="id">eq</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Scales three bands of the stream&#x27;s principal directions: low, mid, high</p>
@@ -422,7 +422,7 @@
       </article>
       <article class="unit reveal" id="beatrepeat">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Repeat</b></div><div class="uc-card" data-vau-card="beatrepeat" data-values="{&quot;interval&quot;: &quot;8&quot;, &quot;length&quot;: &quot;2&quot;, &quot;mix&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Repeat</b></div><div class="uc-card" data-vau-card="beatrepeat" data-values="{&quot;interval&quot;: &quot;8&quot;, &quot;length&quot;: &quot;2&quot;, &quot;mix&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Position Repeat</h2><span class="id">beatrepeat</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">In every run of positions, replays the stream of the few positions before over the last few: a stutter</p>
@@ -474,7 +474,7 @@
       </article>
       <article class="unit reveal" id="gate">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Sparsify</b></div><div class="uc-card" data-vau-card="gate" data-values="{&quot;sink&quot;: &quot;0&quot;, &quot;keep&quot;: &quot;0.25&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Sparsify</b></div><div class="uc-card" data-vau-card="gate" data-values="{&quot;sink&quot;: &quot;0&quot;, &quot;keep&quot;: &quot;0.25&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Sparsify</h2><span class="id">gate</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Keeps only each position&#x27;s largest components and zeroes the rest, making the stream sparse</p>
@@ -500,7 +500,7 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">At each position, only the <i>keep</i> share of the stream's components that are largest in size pass; the rest are set to zero. It shows how much of the stream the layers after it need. The first position, where the model has an attention sink there, is left alone unless <i>sink too</i> is on (on a model with none, such as a music model, it is gated like any other). Keep 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">At each position, only the <i>keep</i> share of the stream's components that are largest in size pass; the rest are set to zero. It shows how much of the stream the layers after it need. The first position, where the model has an attention sink there, is left alone unless <i>sink too</i> is on (on a model with none, such as a music model, it is gated like any other). Keep 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">gate layer=6 keep=0.25</span><span>code(u)</span></div><pre><code>gate_edit(keep=0.25, sink=False)</code></pre></div>
@@ -523,7 +523,7 @@
       </article>
       <article class="unit reveal" id="limiter">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Clamp</b></div><div class="uc-card" data-vau-card="limiter" data-values="{&quot;sink&quot;: &quot;0&quot;, &quot;ceiling&quot;: &quot;0.99&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Clamp</b></div><div class="uc-card" data-vau-card="limiter" data-values="{&quot;sink&quot;: &quot;0&quot;, &quot;ceiling&quot;: &quot;0.99&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Component Clamp</h2><span class="id">limiter</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Clamps each position&#x27;s largest components at a ceiling set by a quantile of their sizes</p>
@@ -549,7 +549,7 @@
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">At each position, the sizes of the stream's components are ranked and the <i>ceiling</i> quantile of them taken as the limit; every component larger than that is clamped to it, sign kept. With ceiling 0.99 the largest 1% of a position's components are held down: in many models a few dimensions carry very large values ("massive activations"), and these are what a limiter catches. Heretic and OBLITERATUS clamp in the same way (winsorization) when they build directions, so that those dimensions do not dominate. The first position, where many models put an attention sink with the largest values of all, is left alone unless <i>sink too</i> is on (on a model with no sink there, it is clamped like any other). Ceiling 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p></p>
+        <p class="help">At each position, the sizes of the stream's components are ranked and the <i>ceiling</i> quantile of them taken as the limit; every component larger than that is clamped to it, sign kept. With ceiling 0.99 the largest 1% of a position's components are held down: in many models a few dimensions carry very large values ("massive activations"), and these are what a limiter catches. Heretic and OBLITERATUS clamp in the same way (winsorization) when they build directions, so that those dimensions do not dominate. The first position, where many models put an attention sink with the largest values of all, is left alone unless <i>sink too</i> is on (on a model with no sink there, it is clamped like any other). Ceiling 1 is neutral.<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p></p>
         
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">limiter layer=6 ceiling=0.99</span><span>code(u)</span></div><pre><code>limiter_edit(q=0.99, sink=False)</code></pre></div>
@@ -570,7 +570,7 @@
       </article>
       <article class="unit reveal" id="multiband">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Bandshrink</b></div><div class="uc-card" data-vau-card="multiband" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;band&quot;: &quot;all&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Bandshrink</b></div><div class="uc-card" data-vau-card="multiband" data-values="{&quot;ratio&quot;: &quot;4&quot;, &quot;band&quot;: &quot;all&quot;, &quot;thresh&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Band Shrink</h2><span class="id">multiband</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">Compresses the stream separately in three bands of its principal directions: low, mid, high</p>
@@ -621,7 +621,7 @@
       </article>
       <article class="unit reveal" id="morph">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Morph</b></div><div class="uc-card" data-vau-card="morph" data-values="{&quot;dir&quot;: &quot;not-x-but-y&quot;, &quot;move&quot;: &quot;away&quot;, &quot;part&quot;: &quot;both&quot;, &quot;keep&quot;: &quot;1&quot;, &quot;pull&quot;: &quot;0.3&quot;, &quot;over&quot;: &quot;0.5&quot;, &quot;k&quot;: &quot;5&quot;, &quot;rank&quot;: &quot;16&quot;, &quot;size&quot;: &quot;1&quot;, &quot;amount&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;all&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Morph</b></div><div class="uc-card" data-vau-card="morph" data-values="{&quot;dir&quot;: &quot;not-x-but-y&quot;, &quot;move&quot;: &quot;away&quot;, &quot;part&quot;: &quot;both&quot;, &quot;keep&quot;: &quot;1&quot;, &quot;pull&quot;: &quot;0.3&quot;, &quot;over&quot;: &quot;0.5&quot;, &quot;k&quot;: &quot;5&quot;, &quot;rank&quot;: &quot;16&quot;, &quot;size&quot;: &quot;1&quot;, &quot;amount&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;all&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Morph</h2><span class="id">morph</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">component</span></div>
             <p class="what">A learned change to what attention and MLPs write, fitted to move one side of a direction&#x27;s texts toward the other</p>
@@ -727,7 +727,7 @@ def knn_distance(a: torch.Tensor, b: torch.Tensor, k: int) -&gt; torch.Tensor:
       </article>
       <article class="unit reveal" id="abliterate">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Abliterate</b></div><div class="uc-card" data-vau-card="abliterate" data-values="{&quot;dir&quot;: &quot;negation&quot;, &quot;shape&quot;: &quot;linear&quot;, &quot;peak&quot;: &quot;0.7&quot;, &quot;width&quot;: &quot;0.4&quot;, &quot;edge&quot;: &quot;0.3&quot;, &quot;share&quot;: &quot;0.5&quot;, &quot;projected&quot;: &quot;1&quot;, &quot;size&quot;: &quot;1&quot;, &quot;bias&quot;: &quot;1&quot;, &quot;strength&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;all&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Abliterate</b></div><div class="uc-card" data-vau-card="abliterate" data-values="{&quot;dir&quot;: &quot;negation&quot;, &quot;shape&quot;: &quot;linear&quot;, &quot;peak&quot;: &quot;0.7&quot;, &quot;width&quot;: &quot;0.4&quot;, &quot;edge&quot;: &quot;0.3&quot;, &quot;share&quot;: &quot;0.5&quot;, &quot;projected&quot;: &quot;1&quot;, &quot;size&quot;: &quot;1&quot;, &quot;bias&quot;: &quot;1&quot;, &quot;strength&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;all&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Abliterate</h2><span class="id">abliterate</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">component</span></div>
             <p class="what">Removes a direction from what attention and MLPs write, with a strength that peaks at one block and tapers</p>
@@ -816,7 +816,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
       </article>
       <article class="unit reveal" id="neuron">
         <div class="unit-top">
-          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Neuron</b></div><div class="uc-card" data-vau-card="neuron" data-values="{&quot;n&quot;: &quot;373&quot;, &quot;op&quot;: &quot;scale&quot;, &quot;value&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;5&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Neuron</b></div><div class="uc-card" data-vau-card="neuron" data-values="{&quot;n&quot;: &quot;373&quot;, &quot;op&quot;: &quot;scale&quot;, &quot;value&quot;: &quot;1&quot;, &quot;_target&quot;: [&quot;block&quot;, &quot;5&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Neuron</h2><span class="id">neuron</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">hidden</span></div>
             <p class="what">Scales, adds to, sets, zeroes, flips or clamps single MLP neurons in one block</p>
@@ -842,7 +842,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
           </tbody>
         </table></div>
         <h3>Help</h3>
-        <p class="help">A neuron is one of the MLP's hidden units (3,072 per block in GPT-2 small): its activation, after the nonlinearity, is what the MLP's output projection reads, and the projection's column for it is what the neuron writes into the stream. <code>n</code> names one neuron or several (<code>n=373,2006</code>), counted from 0. The operation acts on each named neuron's activation at every position: <i>scale</i> multiplies it by the value (1 is neutral, 0 zeroes, −1 flips), <i>add</i> adds the value, <i>set</i> replaces it with the value, <i>zero</i> and <i>flip</i> take no value, <i>clamp</i> holds it within ± the value. The finder in the bench's Directions panel lists neurons that fire differently where the model is about to write a word.</p>
+        <p class="help">A neuron here is one of the MLP's hidden units, of which GPT-2 small has 3,072 in each block. Its activation, after the nonlinearity, is what the MLP's output projection reads, and the projection's column for it is what the neuron writes into the stream. <code>n</code> names one neuron or several (<code>n=373,2006</code>), counted from 0, and the operation acts on each named neuron's activation at every position: <i>scale</i> multiplies it by the value (1 is neutral, 0 zeroes, −1 flips), <i>add</i> adds the value, <i>set</i> replaces it with the value, <i>zero</i> and <i>flip</i> take no value, and <i>clamp</i> holds it within ± the value. A host may also offer a finder, which lists the neurons that fire differently where the model is about to write a word.</p>
         <h3>References</h3><ul><li>elder-plinius, OBLITERATUS. https://github.com/elder-plinius/OBLITERATUS (docs/neuron-lab.md)</li></ul>
         <h3>What runs, for the example line</h3>
 <div class="term"><div class="label"><span class="raw">neuron block=5 n=373 op=scale value=1</span><span>code(u)</span></div><pre><code>mlp[5].register_forward_pre_hook(neuron_hook([373], &#x27;scale&#x27;, 1))
@@ -872,7 +872,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
       </article>
       <article class="unit reveal" id="entropy">
         <div class="unit-top">
-          <figure class="uc wide"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Entropy</b></div><div class="uc-card" data-vau-card="entropy" data-values="{}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc wide"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Entropy</b></div><div class="uc-card" data-vau-card="entropy" data-values="{}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Entropy</h2><span class="meterbadge" title="A meter: it reads the model and leaves it unchanged">meter</span><span class="id">entropy</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">logits</span></div>
             <p class="what">How uncertain the model is about the next token, in bits, step by step</p>
@@ -910,7 +910,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
       </article>
       <article class="unit reveal" id="peakshare">
         <div class="unit-top">
-          <figure class="uc wide"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Peak share</b></div><div class="uc-card" data-vau-card="peakshare" data-values="{&quot;k&quot;: &quot;8&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">Turn a control: the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
+          <figure class="uc wide"><div class="uc-strip"><div class="uc-top"><span class="uc-led"></span><b><i class="vpre">v</i>Peak share</b></div><div class="uc-card" data-vau-card="peakshare" data-values="{&quot;k&quot;: &quot;8&quot;, &quot;_target&quot;: [&quot;layer&quot;, &quot;6&quot;]}"></div></div><p class="uc-hint">When a control is turned, the figure shows GPT-2 small at the nearest setting it was run at.</p></figure>
           <div class="unit-main">
             <div class="unit-head"><h2><span class="vpre">v</span>Peak share</h2><span class="meterbadge" title="A meter: it reads the model and leaves it unchanged">meter</span><span class="id">peakshare</span><span class="space-tag" title="What it transforms (its space, SPEC section 4)">stream</span></div>
             <p class="what">The share of the stream&#x27;s size held by its few largest components, step by step</p>
@@ -956,7 +956,7 @@ def unit_direction(v: torch.Tensor, mean: Optional[torch.Tensor]) -&gt; torch.Te
 
   <script src="site.js?v=3bed5fa99f"></script>
   <script src="vau-explain.js?v=4bc333aae2"></script>
-  <script src="vau-catalogue.js?v=fb0837660c"></script>
+  <script src="vau-catalogue.js?v=d70272f7a6"></script>
   <script src="vau-card.js?v=088c6ddfd2"></script>
   <script src="vau-cards.js?v=29684ebbac"></script>
 </body>

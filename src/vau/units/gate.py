@@ -18,7 +18,7 @@ UNIT = {
     "help": "At each position, only the <i>keep</i> share of the stream's components that are largest in size "
             "pass; the rest are set to zero. It shows how much of the stream the layers after it need. The "
             "first position, where the model has an attention sink there, is left alone unless <i>sink too</i> is on (on a model with none, such as a music model, it is gated like any other). Keep 1 is neutral."
-            "<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream is written in. Those have a weaker claim to meaning than an MLP's neurons, which its nonlinearity singles out; how much weaker depends on the model's norms (a learned scale per coordinate gives them some standing).</p>",
+            "<p>It acts on each coordinate of the stream separately, so what it does depends on the coordinates the stream happens to be written in. These mean less than an MLP's neurons do, since the MLP's nonlinearity singles its neurons out and nothing does the same for the stream's coordinates, except in part the model's norms (a learned scale for each coordinate gives them some meaning of their own).</p>",
     "version": "1.0", "author": "David M. Berry", "licence": "GPL-3.0-or-later",
 }
 

@@ -27,13 +27,13 @@ UNIT = {
     "example": "neuron block=5 n=373 op=scale value=1",
     "space": "hidden",     # it acts on the MLP's neurons, though it hooks the MLP's output (SPEC 2)
     "summary": {"reads": "change", "label": "change"},     # what a host's summary of the strip shows (SPEC 5e)
-    "help": "A neuron is one of the MLP's hidden units (3,072 per block in GPT-2 small): its activation, after "
-            "the nonlinearity, is what the MLP's output projection reads, and the projection's column for it is "
-            "what the neuron writes into the stream. <code>n</code> names one neuron or several "
-            "(<code>n=373,2006</code>), counted from 0. The operation acts on each named neuron's activation at "
+    "help": "A neuron here is one of the MLP's hidden units, of which GPT-2 small has 3,072 in each block. Its "
+            "activation, after the nonlinearity, is what the MLP's output projection reads, and the projection's "
+            "column for it is what the neuron writes into the stream. <code>n</code> names one neuron or several "
+            "(<code>n=373,2006</code>), counted from 0, and the operation acts on each named neuron's activation at "
             "every position: <i>scale</i> multiplies it by the value (1 is neutral, 0 zeroes, −1 flips), "
             "<i>add</i> adds the value, <i>set</i> replaces it with the value, <i>zero</i> and <i>flip</i> take no "
-            "value, <i>clamp</i> holds it within ± the value. The finder in the bench's Directions panel lists "
+            "value, and <i>clamp</i> holds it within ± the value. A host may also offer a finder, which lists the "
             "neurons that fire differently where the model is about to write a word.",
     "inspired_by": "OBLITERATUS's Neuron Lab",
     "references": ["elder-plinius, OBLITERATUS. https://github.com/elder-plinius/OBLITERATUS (docs/neuron-lab.md)"],
