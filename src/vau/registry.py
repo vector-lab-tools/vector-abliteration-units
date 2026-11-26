@@ -17,12 +17,13 @@ BUILTIN = Path(__file__).resolve().parent / "units"
 class Unit:
     """One loaded unit: its module, where it came from, and its manifest."""
 
-    def __init__(self, module, path: Path, source: str):
+    def __init__(self, module, path: Path, source: str, m: Optional[Dict[str, Any]] = None, collection: Optional[str] = None):
         self.module = module
         self.path = path
         self.source = source                 # "builtin", or the name the host gave the folder
-        self.m: Dict[str, Any] = module.UNIT
+        self.m: Dict[str, Any] = m if m is not None else module.UNIT   # a derived collection's units carry their own
         self.id: str = self.m["id"]
+        self.collection = collection         # set for a derived collection's units ("audio"); else collection.of decides
 
     def fn(self, name: str) -> Optional[Callable]:
         f = getattr(self.module, name, None)
@@ -68,9 +69,16 @@ class Unit:
 class Registry:
     """The units in a list of folders: the built-in set first, then any the host adds. A unit
     that does not load or does not pass the checks is left out and listed with its reason;
-    the rest are unaffected. `taken` names ids the host already uses for strips of its own."""
+    the rest are unaffected. `taken` names ids the host already uses for strips of its own.
+    `collection` chooses the built-in units' collection: "core" (the default) or one made from it,
+    such as "audio", whose units are the Core ones it keeps, tuned by its file (SPEC 5h)."""
 
-    def __init__(self, folders: Iterable[Tuple[Path, str]] = (), builtin: bool = True, taken: Iterable[str] = ()):
+    def __init__(self, folders: Iterable[Tuple[Path, str]] = (), builtin: bool = True, taken: Iterable[str] = (),
+                 collection: Optional[str] = None):
+        from .collection import COLLECTIONS, CORE
+        if collection is not None and collection not in COLLECTIONS:
+            raise ValueError(f"no collection {collection!r}; there are {', '.join(COLLECTIONS)}")
+        self.collection = collection or CORE
         self.folders: List[Tuple[Path, str]] = ([(BUILTIN, "builtin")] if builtin else []) + [(Path(f), s) for f, s in folders]
         self.taken = set(taken)
         self.units: Dict[str, Unit] = {}
@@ -86,8 +94,30 @@ class Registry:
                 if path.name.startswith("_"):
                     continue
                 self._load_one(path, source)
+        self._tune()
         self.loaded = True
         return self
+
+    def _tune(self):
+        """For a collection made from the Core one: keep the built-in units its tuning lists, each
+        with its derived manifest; drop the rest. A host's own units are untouched."""
+        from .collection import COLLECTIONS, derive, tuning
+        if not COLLECTIONS[self.collection].get("from"):
+            return
+        t = tuning(self.collection).get("units", {})
+        for uid, u in list(self.units.items()):
+            if u.source != "builtin":
+                continue
+            if uid not in t:
+                del self.units[uid]
+                continue
+            m = derive(u.m, t[uid])
+            bad = check(m, u.module)
+            if bad:
+                del self.units[uid]
+                self.errors.append({"file": u.path.name, "source": self.collection, "error": "; ".join(bad)})
+                continue
+            self.units[uid] = Unit(u.module, u.path, u.source, m, self.collection)
 
     def _load_one(self, path: Path, source: str):
         name = f"vau_units_{source}_{path.stem}".replace("-", "_")
@@ -134,9 +164,14 @@ class Registry:
         from .collection import COLLECTIONS, interface
         collections = {cid: {"title": c["title"], "prefix": c.get("prefix", ""), "interface": interface(cid)} for cid, c in COLLECTIONS.items()}
         units = [u.public(caps) for u in self.units.values()]
-        out = {"vau": VAU_VERSION, "units": units, "host_params": HOST_PARAMS, "collections": collections, "errors": list(self.errors)}
+        out = {"vau": VAU_VERSION, "collection": self.collection, "units": units, "host_params": HOST_PARAMS,
+               "collections": collections, "errors": list(self.errors)}
+        from .collection import tuning
+        tm = tuning(self.collection).get("model")
+        if tm:
+            out["model"] = tm                                 # the model a derived collection was tuned on
         from .presets import for_model
-        ps = for_model(model)
+        ps = for_model(model if model is not None else (tm or {}).get("name"))
         if ps:
             out["presets"] = {"model": ps["model"], "measured": ps["measured"]}
             for e in units:

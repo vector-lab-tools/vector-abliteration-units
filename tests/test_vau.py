@@ -9,7 +9,7 @@ import torch
 import pytest
 
 import vau
-from vau.testing import StandInHost, conformance, run_edit
+from vau.testing import StandInHost, conformance, line, run_edit
 
 REG = vau.Registry().load()
 BUILTIN = sorted(REG.units)
@@ -495,3 +495,65 @@ def test_the_catalogue_carries_a_models_presets_only_when_the_host_names_that_mo
     delay = next(e for e in c["units"] if e["id"] == "delay")
     assert delay["start"] == "Feedback Loop" and len(delay["presets"]) == 7
     assert sum(len(e.get("presets", [])) for e in c["units"]) == 75
+
+
+# ---- the Audio Collection (SPEC 5h) and vau.mlx
+
+AUDIO_CAPS = {"stream", "output", "ordered", "stats", "pca", "directions", "contrasts"}
+
+
+def test_the_audio_collection_is_the_core_units_tuned_and_leaves_the_core_ones_alone():
+    a = vau.Registry(collection="audio").load()
+    assert not a.errors and len(list(a)) == 13
+    assert {u.collection for u in a} == {"audio"} and a.get("beatrepeat").m["title"] == "Frame Repeat"
+    assert vau.collection.name(a.get("delay")) == "Lookback"                  # no prefix: the names as an audio host shows them
+    assert a.get("delay").m["params"][0]["default"] == 8 and a.get("morph") is None and a.get("entropy") is None
+    c = vau.Registry().load()
+    assert c.get("delay").m["params"][0]["default"] == 4 and c.get("beatrepeat").m["title"] == "Position Repeat"
+    assert vau.collection.of(c.get("delay")) == "core"
+    with pytest.raises(ValueError):
+        vau.Registry(collection="nowhere")
+
+
+def test_every_audio_unit_passes_conformance_and_its_tuning_names_only_its_own_settings():
+    a = vau.Registry(collection="audio").load()
+    core = vau.Registry().load()
+    t = vau.collection.tuning("audio")["units"]
+    for u in a:
+        assert conformance(u) == [], u.id
+        keys = {p["key"] for p in core.get(u.id).m["params"]}
+        assert set(t[u.id].get("params", {})) <= keys, u.id
+        for p in u.m["params"]:
+            if p["kind"] in ("knob", "fader", "int"):
+                assert p["min"] <= p["default"] <= p["max"], (u.id, p["key"])
+                if "safe" in p:
+                    assert p["min"] <= p["safe"][0] <= p["safe"][1] <= p["max"], (u.id, p["key"])
+        if "places" in u.m:                                  # the default may be its start preset's, beyond the measured places
+            pd = u.m["place_default"]
+            assert pd == "all" or (isinstance(pd, int) and 0 <= pd <= 12), u.id
+
+
+def test_an_audio_units_host_feature_defaults_apply_unless_the_line_sets_them():
+    from vau.context import UnitContext
+    a = vau.Registry(collection="audio").load()
+    assert vau.hostfx.settings(UnitContext(a.get("delay"), line("delay layer=6")))["keepnorm"] is True
+    assert vau.hostfx.settings(UnitContext(a.get("delay"), line("delay layer=6 keepnorm=0")))["keepnorm"] is False
+    assert vau.hostfx.settings(UnitContext(vau.Registry().load().get("delay"), line("delay layer=6")))["keepnorm"] is False
+
+
+def test_the_audio_catalogue_carries_its_model_and_its_presets_and_its_own_look():
+    cat = vau.Registry(collection="audio").catalogue(AUDIO_CAPS)
+    assert cat["collection"] == "audio" and cat["model"]["sink"] is False
+    assert cat["presets"]["model"]["name"] == cat["model"]["name"]
+    d = next(e for e in cat["units"] if e["id"] == "delay")
+    assert d["prefix"] == "" and d["start"] == "Feedback Loop" and d["host_defaults"] == {"keepnorm": 1}
+    i = cat["collections"]["audio"]["interface"]
+    placed = [u for g in i["groups"] for u in g["units"]]
+    assert sorted(placed) == sorted(e["id"] for e in cat["units"]) and len(placed) == len(set(placed))
+    assert d["tint"] == i["tint"] != cat["collections"]["core"]["interface"]["tint"]
+
+
+def test_vau_mlx_imports_without_mlx_and_names_what_it_ports():
+    import vau.mlx
+    assert vau.mlx.PORTED == {"neuron", "erosion", "abliterate"}
+    assert all(hasattr(vau.mlx, f) for f in ("neuron_fn", "erosion_fn", "abliterate_fn", "port"))

@@ -132,6 +132,15 @@ def check(m: Any, module=None) -> List[str]:
         s = m["summary"]
         if not isinstance(s, dict) or s.get("reads") not in SUMMARIES or not isinstance(s.get("label"), str) or not s.get("label"):
             bad.append(f"summary needs {{'reads': one of {', '.join(SUMMARIES)}, 'label': ...}}")
+    hd = m.get("host_defaults")
+    if hd is not None:
+        from .hostfx import RESERVED
+        if not isinstance(hd, dict) or any(k not in RESERVED for k in hd):
+            bad.append(f"host_defaults is a dict of host features ({', '.join(RESERVED)}) and their defaults")
+    if "places" in m and not (isinstance(m["places"], list) and m["places"]):
+        bad.append("places is a list of the layers or blocks the unit is measured to work at")
+    if "note" in m and not isinstance(m["note"], str):
+        bad.append("note is a sentence or two on what the unit does differently in its collection")
     if module is not None:
         has = lambda n: callable(getattr(module, n, None))
         if m.get("level") == "probe":

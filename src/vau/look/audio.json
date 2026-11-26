@@ -1,0 +1,84 @@
+{
+  "_": "The Audio Collection's interface, beside core.css (which it shares with the Core Collection): its components, its tint and its units' groups (SPEC 5d, 5h).",
+  "components": {
+    "defaults": {
+      "knob": "knob-1",
+      "int": "knob-1",
+      "fader": "knob-big-1",
+      "choice": "selector",
+      "toggle": "light-1",
+      "direction": "menu-1",
+      "text": "field-1",
+      "target": "knob-small-1",
+      "target-menu": "menu-1",
+      "host-knob": "knob-small-1",
+      "host-choice": "selector",
+      "host-toggle": "light-1"
+    },
+    "units": {
+      "gate": {
+        "keep": "knob-big-3"
+      },
+      "limiter": {
+        "ceiling": "knob-big-3"
+      },
+      "shifter": {
+        "angle": "knob-big-3"
+      },
+      "neuron": {
+        "value": "knob-big-3"
+      }
+    }
+  },
+  "tint": "#93621d",
+  "groups": [
+    {
+      "id": "time",
+      "title": "Along time",
+      "what": "Draw on earlier positions: each position's stream at their layer gets something of the positions before it (an echo, a decaying average, a replay).",
+      "units": [
+        "delay",
+        "reverb",
+        "beatrepeat"
+      ]
+    },
+    {
+      "id": "size",
+      "title": "On the stream's size",
+      "what": "Act on the length of the stream's vector and leave its direction alone, so they do not depend on the coordinates the stream is written in.",
+      "units": [
+        "compressor"
+      ]
+    },
+    {
+      "id": "element",
+      "title": "Coordinate by coordinate",
+      "what": "Act on each of the stream's coordinates separately (squash, round, zero or clamp them), so what they do depends on the coordinates the stream is written in.",
+      "units": [
+        "saturator",
+        "erosion",
+        "gate",
+        "limiter"
+      ]
+    },
+    {
+      "id": "subspace",
+      "title": "Along directions and principal bands",
+      "what": "Act along chosen directions of the stream, or bands of its principal directions measured on the unchanged model.",
+      "units": [
+        "eq",
+        "multiband",
+        "shifter"
+      ]
+    },
+    {
+      "id": "block",
+      "title": "Inside a block",
+      "what": "Act inside the blocks rather than between them: on what attention and the MLP write, or on the MLP's neurons.",
+      "units": [
+        "abliterate",
+        "neuron"
+      ]
+    }
+  ]
+}

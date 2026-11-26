@@ -72,18 +72,21 @@ def envelope(n: int, shape: str, peak: float, width: float, edge: float) -> List
 
 
 def settings(u) -> Dict[str, Any]:
-    """The host features as a line sets them, with their defaults."""
+    """The host features as a line sets them, with their defaults: the unit's own (host_defaults in
+    its manifest, as a tuned collection gives them) before VAU's."""
     p = u.params
+    hd = (getattr(getattr(u, "unit", None), "m", None) or {}).get("host_defaults", {})
 
     def num(k, d):
+        d = hd.get(k, d)
         try:
             return float(p.get(k, d))
         except ValueError:
             raise u.error(f"{k}={p[k]} should be a number.")
-    return {"wet": min(1.0, max(0.0, num("wet", 1))), "env": p.get("env", "none"),
+    return {"wet": min(1.0, max(0.0, num("wet", 1))), "env": p.get("env", hd.get("env", "none")),
             "epeak": min(1.0, max(0.0, num("epeak", 0.5))), "ewidth": min(1.0, max(0.05, num("ewidth", 0.5))),
             "eedge": min(1.0, max(0.0, num("eedge", 0))), "keepnorm": bool(int(num("keepnorm", 0))),
-            "control": p.get("control", "none"), "cseed": int(num("cseed", 0)),
+            "control": p.get("control", hd.get("control", "none")), "cseed": int(num("cseed", 0)),
             "wfrom": max(0, int(num("wfrom", 0))), "wto": max(0, int(num("wto", 0)))}
 
 

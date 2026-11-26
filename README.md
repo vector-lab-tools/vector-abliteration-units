@@ -11,7 +11,7 @@
 
 **Author:** David M. Berry  
 **Institution:** University of Sussex  
-**Version:** 0.3.0 (VAU 1), in development  
+**Version:** 0.3.1 (VAU 1), in development  
 **Licence:** GNU General Public License, version 3 or later (GPL-3.0-or-later). See `LICENSE`.  
 **Site:** <https://vector-lab-tools.github.io/vector-abliteration-units/>, the standard, the built-in units and the figures (from `docs/`)
 
@@ -48,7 +48,7 @@ The standard is in [SPEC.md](SPEC.md), and on the [site](https://vector-lab-tool
 
 <p><a href="docs/img/units.svg"><img src="docs/img/units.svg" width="100%" alt="The sixteen built-in units drawn as strips on a mixing desk at the settings of their example lines, each with what it needs from a host below it."></a></p>
 
-The Core Collection's units as strips, at the settings of their example lines, with what each needs from a host; the green mark on a knob or fader is its neutral value. The [units page](https://vector-lab-tools.github.io/vector-abliteration-units/units.html) gives each one's parameters, ranges, neutral values, help and code.
+The Core Collection's units as strips, at the settings of their example lines, with what each needs from a host; the green mark on a knob or fader is its neutral value. The [VAU text page](https://vector-lab-tools.github.io/vector-abliteration-units/units.html) gives each one's parameters, ranges, neutral values, help and code.
 
 | Unit | What it does | Needs |
 |---|---|---|
@@ -114,6 +114,16 @@ The built-in units are the **Core Collection**. A host draws each unit's strip w
 
 **Models without an attention sink.** Several units leave a language model's first position alone, its attention sink. A host whose model has none there (an audio model, whose first position is its first frame) says so with `Host.sink()`, and the units bend it like any other. A parameter may also apply only in some settings (`when`): vAbliterate's peak, width and edge while its shape is not flat, *sink too* only where there is a sink. The card dims or leaves out what does not apply. The Core Collection's interface groups its units by what they act on (along time, on the stream's size, coordinate by coordinate, along directions, inside a block, meters).
 
+**Two versions: VAU text and VAU audio.** The Core Collection is VAU text: the units as written, on language models. VAU audio is the **Audio Collection**, the same units tuned for an audio model, with the names, defaults, ranges, host-feature settings and placements found to work on Magenta RT 2 small: Frame Repeat for Position Repeat, Keep size on for Lookback and Running Average, Abliterate's Strength open to 6, measured safe ranges for each setting, and the names without the v. It is the same files and the same edits, with one file saying what differs (`src/vau/collections/audio.json`, written by `tools/import_audio.py`):
+
+```python
+import vau
+reg = vau.Registry(collection="audio").load()      # 13 units: the Core effects, tuned for audio
+cat = reg.catalogue(caps)                           # carries the model it was tuned on and its presets
+```
+
+A host whose model runs in MLX can use `vau.mlx`, MLX versions of Neuron, Quantise and Abliterate that keep the edit on the GPU (`pip install "vau[mlx]"`). SPEC.md, section 5h. The site has a page for each version: [VAU text](https://vector-lab-tools.github.io/vector-abliteration-units/units.html), with each unit's figure on GPT-2 small, and [VAU audio](https://vector-lab-tools.github.io/vector-abliteration-units/audio.html), with each unit's sweep on Magenta RT 2 small to listen to.
+
 ## Using it in a host
 
 ```bash
@@ -125,10 +135,16 @@ A host subclasses `vau.Host`, says what it offers in `capabilities()`, and calls
 
 ## The site
 
-The site is served by GitHub Pages from `docs/`: plain HTML and CSS, with no build step to serve it. `docs/index.html` and `docs/img/architecture.svg` are written by hand. The rest comes from the repository: after changing SPEC.md or a built-in unit, rebuild the standard's page, the units page, the unit cards on the home page and the two figures drawn from the manifests with
+The site is served by GitHub Pages from `docs/`: plain HTML and CSS, with no build step to serve it. `docs/index.html` and `docs/img/architecture.svg` are written by hand. The rest comes from the repository: after changing SPEC.md or a built-in unit, rebuild the standard's page, the two units pages (VAU text and VAU audio), the unit cards on the home page and the two figures drawn from the manifests with
 
 ```bash
 python tools/build_site.py      # needs torch and numpy, as vau does
+```
+
+The Audio Collection's tuning and the audio page's sweeps (`docs/audio/`, `docs/vau-audio.js`) come from the audio host they were measured in:
+
+```bash
+python tools/import_audio.py path/to/audio-host --media
 ```
 
 and commit what it writes in `docs/`, including `vau-explain.js`, the explainers bundled as the package ships them. The screenshots in `docs/img/` are of Abliteration Lens.

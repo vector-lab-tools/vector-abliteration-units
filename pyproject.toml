@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vector-abliteration-units"
-version = "0.3.0"
+version = "0.3.1"
 description = "Vector Abliteration Units (VAU): a standard for units that change what a model does from inside, and a host to load and run them"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -15,6 +15,7 @@ dependencies = ["torch>=2.1", "numpy>=1.24"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+mlx = ["mlx>=0.25"]              # vau.mlx: MLX versions of some edits, for hosts on Apple silicon
 
 [project.urls]
 Repository = "https://github.com/vector-lab-tools/vector-abliteration-units"
@@ -23,7 +24,7 @@ Repository = "https://github.com/vector-lab-tools/vector-abliteration-units"
 where = ["src"]
 
 [tool.setuptools.package-data]
-vau = ["units/*.py", "units/*.explain.js", "explain/*.js", "explain/*.css", "explain/*.json", "look/*.css", "look/*.json", "look/*.js", "presets/*.json"]
+vau = ["units/*.py", "units/*.explain.js", "explain/*.js", "explain/*.css", "explain/*.json", "look/*.css", "look/*.json", "look/*.js", "presets/*.json", "collections/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

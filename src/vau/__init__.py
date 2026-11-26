@@ -15,6 +15,6 @@ from .host import Host, UnitError
 from .manifest import CAPABILITIES, VAU_VERSION, check, requirements
 from .registry import BUILTIN, Registry, Unit
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __all__ = ["VAU_VERSION", "CAPABILITIES", "Host", "UnitError", "Registry", "Unit", "UnitContext", "Line",
            "check", "requirements", "validate", "prepare", "attach", "read", "code", "BUILTIN", "explain_files", "look_files", "COLLECTIONS", "presets_for", "__version__"]

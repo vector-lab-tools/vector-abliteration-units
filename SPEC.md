@@ -287,6 +287,22 @@ A preset is a chain line with a name and a tip, and the figures it was kept on: 
 
 `vau.presets_for(model)` finds a model's presets by any of its ids or its name. A host that passes its model to `Registry.catalogue(capabilities, model=...)` gets each unit's `presets` and `start` in its catalogue entry, and `presets` at the top says which model and how they were measured. Hosts may keep presets of their own and the user's beside these.
 
+## 5h. The Audio Collection, and MLX versions
+
+VAU comes in two versions. **VAU text** is the Core Collection on language models, as the units are written. **VAU audio** is the **Audio Collection**: the Core Collection's units tuned for an audio model, with the same files and the same edits, and the names, defaults, ranges and placements that were found to work on one (Magenta RT 2 small, where a position is a 40 ms frame and the first position is no attention sink).
+
+A collection may be made from another: its entry in `vau.COLLECTIONS` names the collection it comes `from` and its `tuning`, a file (`vau/collections/audio.json`) that says, for each unit it keeps, what differs from the Core manifest. A unit not listed is not in it: the Audio Collection leaves out the meters and Morph, which need a host to offer logits or texts. A host chooses the collection with `Registry(collection="audio")`; each unit then carries a manifest derived from the Core one (the Core one is not changed), and `collection.of(unit)` is `"audio"`. A tuning entry may give:
+
+- `title` and `short`: the unit's names here. The Audio Collection has no prefix, and calls Position Repeat Frame Repeat, since its positions are frames;
+- `params`: for each setting, what differs: `default`, `max`, `tip`, `hidden` (the setting has no effect on the model), `safe` (the part of its range in which the sound neither fell silent nor overdrove on the seeds measured, with `measured: true`, and `fragile` where no part held), and `taper` (how the knob's travel maps onto a range opened past the Core's, as pairs of travel and value: Abliterate's Strength runs to 6 here);
+- `host_defaults`: the host features (5a) the unit starts with, such as Keep size on Lookback and Running Average, which fell near silent without it. A line's own setting wins; `hostfx.settings` reads them;
+- `places` and `place_default`: the layers or blocks it was measured to work at, and where it starts (`"all"` for every block);
+- `note`: what the unit does differently here, beside its help.
+
+The catalogue of a derived collection says so at the top (`collection`, and `model`: the model it was tuned on, with `sink`), and carries that model's presets (5g) without the host naming it. The Audio Collection shares the Core's stylesheet, with an interface of its own (`look/audio.json`: its tint and groups). The tuning is written by `tools/import_audio.py` from the audio host it was measured in, keeping only what differs from the Core manifests, so a change to a Core unit reaches both versions.
+
+**MLX versions (optional).** `vau.mlx` holds MLX versions of three units' edits (Neuron, Quantise and Abliterate), for a host whose model runs in MLX on Apple silicon, so that the edit stays on the GPU instead of copying the stream to torch and back at each hooked layer. It needs `mlx` (`pip install "vau[mlx]"`), imported only when an edit is first made. Each edit is marked `fn.mlx = True`; `vau.mlx.port()` swaps a strip's torch hooks for them in a host that keeps its hooks in tables (`{"edits": {layer: [fn]}, "outs": {(block, kind): [fn]}, "ins": {(block, kind): [fn]}}`), and keeps the torch path where a host feature needs it (a window, a random control). `tests/test_mlx.py` checks each against its unit, where MLX is installed.
+
 ## 6. Where units come from
 
 A host loads the built-in units from the package (`vau.BUILTIN`), then any folders it adds, such as a user folder. A unit is ordinary Python, so loading one runs it:

@@ -280,3 +280,23 @@ dialog.lightbox::backdrop { background: rgba(8, 9, 12, 0.82); }
   background: #1e2128; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; z-index: 1; }
 .lightbox .lb-close:hover { border-color: var(--accent); color: var(--accent); }
 .content p.small { font-size: 0.88rem; color: var(--ink-dim); max-width: 60em; }
+/* VAU audio: a unit's sweep (vau-listen.js) */
+.au-listen { margin: 0.9rem 0 0.4rem; padding: 0.7rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); }
+.au-head { margin-bottom: 0.45rem; }
+.au-row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.4rem; align-items: baseline; margin: 0.15rem 0; }
+.au-k { font: 600 0.74rem var(--mono); color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+.au-steps { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.au-s { font: 0.74rem var(--mono); padding: 0.12rem 0.5rem; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); cursor: pointer; min-width: 2.4rem; }
+.au-s:hover { border-color: var(--ink-dim); }
+.au-s.near { box-shadow: inset 0 -2px 0 #93621d; }
+.au-s.on { background: #93621d; border-color: #93621d; color: #fff; }
+.au-s.bad { color: #b0452c; }
+.au-s.bad.on { color: #fff; }
+.au-orig { font-weight: 600; }
+.au-now { margin-top: 0.5rem; font-size: 0.86rem; color: var(--ink-dim); min-height: 1.3em; }
+.au-now code { font-size: 0.78rem; }
+.au-m { font: 0.74rem var(--mono); }
+.au-bad { display: inline-block; margin-left: 0.4rem; color: #b0452c; font: 0.74rem var(--mono); }
+.au-bad-key { color: #b0452c; font-family: var(--mono); }
+.au-note { font-size: 0.92rem; color: var(--ink-dim); }
+@media (max-width: 560px) { .au-row { grid-template-columns: 1fr; } }

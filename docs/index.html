@@ -34,7 +34,8 @@
         <nav class="site-nav" aria-label="Site">
           <a href="index.html" aria-current="page">Home</a>
           <a href="spec.html">The standard</a>
-          <a href="units.html">Units</a>
+          <a href="units.html">Text</a>
+          <a href="audio.html">Audio</a>
           <a href="https://github.com/vector-lab-tools/vector-abliteration-units">GitHub</a>
         </nav>
         <button class="theme-toggle" type="button" aria-label="Switch between light and dark" title="Switch between light and dark">
@@ -47,21 +48,23 @@
 
   <section class="hero">
     <div class="wrap hero-inner">
-      <span class="kicker">Vector Lab · shared standard · VAU 1 · version 0.3.0</span>
+      <span class="kicker">Vector Lab · shared standard · VAU 1 · version 0.3.1</span>
       <h1>Vector Abliteration Units</h1>
       <p class="tagline">A standard for units that change, or read, what a model does from inside, and the host that loads and runs them.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="spec.html">The standard</a>
-        <a class="btn" href="units.html">The Core Collection</a>
+        <a class="btn" href="units.html">VAU text</a>
+        <a class="btn" href="audio.html">VAU audio</a>
         <a class="btn" href="https://github.com/vector-lab-tools/vector-abliteration-units">Source on GitHub</a>
       </div>
       <div class="stats" aria-label="VAU in figures">
         <div><b>VAU 1</b><span>The standard's version</span></div>
         <div><b>16</b><span>Units in the Core Collection</span></div>
+        <div><b>13</b><span>Tuned for audio, in the Audio Collection</span></div>
         <div><b>4</b><span>Sites a unit can act on</span></div>
         <div><b>10</b><span>Capabilities a host can offer</span></div>
-        <div><b>2,454</b><span>Lines of Python, host library and units</span></div>
-        <div><b>60</b><span>Tests passed</span></div>
+        <div><b>2,748</b><span>Lines of Python, host library and units</span></div>
+        <div><b>65</b><span>Tests passed</span></div>
       </div>
     </div>
   </section>
@@ -109,8 +112,10 @@
         <a class="card" href="units.html#peakshare"><h3><span class="vpre">v</span>Peak share <span class="meterbadge">meter</span></h3><p>The share of the stream&#x27;s size held by its few largest components, step by step.</p><span class="after">stream · needs stream</span></a>
 <!-- units:end -->
       </div>
+      <h3 class="look-h">Two versions: VAU text and VAU audio</h3>
+      <p>The Core Collection is <a href="units.html">VAU text</a>: the units as written, on language models, each with a figure of what it does to GPT-2 small. <a href="audio.html">VAU audio</a> is the Audio Collection: thirteen of the same units, tuned for an audio model, with the names, defaults, ranges and placements that were found to work on Magenta RT 2 small, where a position is a 40 ms frame. Position Repeat is Frame Repeat there, Lookback and Running Average keep the stream's size, Abliterate's strength runs to 6, and each setting carries the part of its range that held. It is the same files and the same edits, with one file saying what differs; a host loads it with <code>vau.Registry(collection="audio")</code>, and a host whose model runs in MLX can use <code>vau.mlx</code>, MLX versions of three units' edits. The audio page has each unit's sweep on the model to listen to (<a href="spec.html#5h-the-audio-collection-and-mlx-versions">SPEC.md, section 5h</a>).</p>
       <h3 class="look-h">Presets, by model</h3>
-      <p>A setting that bends one model well can silence another, so VAU keeps presets per model, each measured on it. The first set is 75 presets for twelve units on Magenta RT 2 small, a music model, each kept only if it broke the sound on none of ten seeds it was not chosen on, with the preset each unit should start at there. A host that names its model gets them with its units; the <a href="units.html">units page</a> lists them under each unit (<a href="spec.html#5g-presets-by-model">SPEC.md, section 5g</a>). Units that leave a language model's attention sink alone bend the first position like any other where the model has none.</p>
+      <p>A setting that bends one model well can silence another, so VAU keeps presets per model, each measured on it. The first set is 75 presets for twelve units on Magenta RT 2 small, a music model, each kept only if it broke the sound on none of ten seeds it was not chosen on, with the preset each unit should start at there. A host that names its model gets them with its units; the <a href="audio.html">audio page</a> lists them under each unit (<a href="spec.html#5g-presets-by-model">SPEC.md, section 5g</a>). Units that leave a language model's attention sink alone bend the first position like any other where the model has none.</p>
       <h3 class="look-h">The collection's look</h3>
       <p>The Core Collection has a look of its own, which the package ships as one stylesheet (<code>vau.look_files()</code>, <a href="spec.html#5d-collections-and-their-look-host-presentation">SPEC.md, section 5d</a>): studio hardware, photographed rather than drawn. A deep blue enamelled faceplate with chrome screws, black fluted knobs with white pointers in a ring of printed dots, white legends in light capitals, red jewel lights, and meters as backlit amber faces with needles. A host draws each unit's strip with its own frame and top line (power, name, help and output summary, which VAU fills with the unit's help and suggested readings) and puts the unit's controls on a card inside it. On the card of a unit in the collection, marked <code>vau-core</code>, the stylesheet sets the <code>--vu-*</code> properties the host draws with, and the host adds a small VAU at the foot. Other collections can have looks of their own. Below, two units' cards, drawn live by VAU's card runtime as a host would mount them: turn the knobs and the selector. No model runs on this page, so the cards change only themselves; in a host they change the model, and on the <a href="units.html">units page</a> turning one shows GPT-2 small's text at the nearest setting it was run at.</p>
       <div class="strip-mocks" aria-label="Two units' cards in the Core Collection's look, drawn live by VAU's card runtime: vNorm Shrink, with a layer knob, two knobs and a large threshold knob printed 0 to 10; and vBand Shrink, with a four-way rotary selector for its band and a large threshold knob.">
@@ -199,7 +204,8 @@ print(conformance(unit) or <span class="s">"passes"</span>)</code></pre></div>
       <div class="links">
         <a href="https://github.com/vector-lab-tools/vector-abliteration-units"><b>Source</b><span>vector-lab-tools/vector-abliteration-units on GitHub</span></a>
         <a href="spec.html"><b>The standard</b><span>VAU 1, from SPEC.md</span></a>
-        <a href="units.html"><b>The Core Collection</b><span>Each unit's manifest, parameters and code</span></a>
+        <a href="units.html"><b>VAU text</b><span>The Core Collection: each unit's manifest, parameters, code and figure</span></a>
+        <a href="audio.html"><b>VAU audio</b><span>The Audio Collection: each unit's tuning, presets and sweep</span></a>
         <a href="https://github.com/vector-lab-tools/diffusionatlas"><b>Diffusion Atlas</b><span>A sibling instrument, for diffusion models</span></a>
         <a href="https://vector-lab-tools.github.io"><b>Vector Lab</b><span>Overview and map of the instruments</span></a>
         <a href="https://github.com/vector-lab-tools/vector-abliteration-units/blob/main/CITATION.cff"><b>Citation</b><span>CITATION.cff</span></a>
@@ -210,7 +216,7 @@ print(conformance(unit) or <span class="s">"passes"</span>)</code></pre></div>
   </main>
 
   <footer class="site-footer">
-    <div class="wrap"><p>Vector Abliteration Units 0.3.0 (VAU 1) · David M. Berry, University of Sussex · GPL-3.0-or-later · part of the <a href="https://github.com/vector-lab-tools">Vector Lab</a></p></div>
+    <div class="wrap"><p>Vector Abliteration Units 0.3.1 (VAU 1) · David M. Berry, University of Sussex · GPL-3.0-or-later · part of the <a href="https://github.com/vector-lab-tools">Vector Lab</a></p></div>
   </footer>
 
   <script src="site.js"></script>
